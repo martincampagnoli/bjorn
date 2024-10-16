@@ -1,0 +1,14 @@
+//NOTE: We want to disable all auto-formatting/auto-fixing for our students
+{
+    "eslint.format.enable": true,
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "debug.onTaskErrors": "abort",
+    "debug.terminal.clearBeforeReusing": true,
+    "editor.rulers": [
+        110
+    ],
+    "editor.formatOnSave": false,
+    "editor.codeActionsOnSave": {
+        "source.fixAll": "never"
+    }
+}

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <title>Dokkie</title>
+
+        <link rel="stylesheet" href="/assets/css/index.css" />
+        <link rel="stylesheet" href="/assets/css/demo.css" />
+    </head>
+    <body>
+        <nav>
+            <p>Dokkie</p>
+            
+            <ul>
+                <li>
+                    <a href="index.html">Home</a>
+                </li>
+                <li>
+                    <a href="demo.html" class="active">Demo</a>
+                </li>
+            </ul>
+        </nav>
+
+        <main>
+            <h1>Demo</h1>
+
+            <h2>Voorbeeld #1</h2>
+
+            <p>Met TypeScript kun je interactieve elementen aan je website toevoegen die reageren op invoer van de gebruiker!</p>
+
+            <button id="voorbeeld1-knop">Klik mij!</button>
+
+            <div id="voorbeeld1-resultaat"></div>
+
+            <h2>Voorbeeld #2</h2>
+
+            <p>Het is ook mogelijk om met TypeScript invoer van de gebruiker uit te lezen.</p>
+            
+            <input type="text" id="voorbeeld2-naam" placeholder="Wat is je naam?" />
+            <button id="voorbeeld2-knop">Bevestigen</button>
+
+            <div id="voorbeeld2-resultaat"></div>
+
+            <h2>Voorbeeld #3</h2>
+
+            <p>Afbeeldingen die je direct in een <code>img</code> plaatst kun je in de <code>./wwwroot/assets/img</code>` map plaatsen.</p>
+
+            <img src="/assets/img/dokkie.png" width="100" height="100" />
+
+            <p>Afbeeldingen die je via TypeScript wilt inladen (dynamisch) moet je <b>altijd</b> in de <code>./wwwroot/public</code> map plaatsen.</p>
+            
+            <button id="voorbeeld3-knop">Toon afbeelding</button>
+
+            <div id="voorbeeld3-resultaat"></div>
+        </main>
+
+        <script src="/src/demo.ts" type="module"></script>
+    </body>
+</html>

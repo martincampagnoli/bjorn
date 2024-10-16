@@ -1,0 +1,44 @@
+body {
+    font-size: 1.2em;
+    margin: 0;
+    font-family: sans-serif;
+}
+
+nav {
+    display: flex;
+    background-color: #351fb7;
+    color: #ffffff;
+    padding: 0px 8px;
+}
+
+nav p {
+    font-weight: bold;
+    margin-right: 16px;
+    text-shadow: 2px 2px #000000;
+    pointer-events: none;
+}
+
+nav ul {
+    display: flex;
+    list-style-type: none;
+    padding: 0;
+}
+
+nav ul li {
+    margin-right: 16px
+}
+
+nav ul li a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav ul li a:hover, nav ul li a.active {
+    color: #f35279;
+    text-decoration: underline;
+}
+
+main {
+    margin: 8px;
+}
