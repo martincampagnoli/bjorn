@@ -60,45 +60,45 @@ function showExistingEvent(): void {
 
     // Function to display participants
     function displayParticipants(): void {
-        participantsContainer.innerHTML = ""; // Clear previous list
-        participants.forEach(participant => {
+       participants.forEach(participant => {
             const p: HTMLElement = document.createElement("p");
             const costs: CostDetails[] = participantCosts[participant] || []; // Ensure it retrieves costs
 
             // Calculate total cost for the participant
             const totalCost: number = costs.reduce((sum, cost) => sum + cost.amount, 0);
 
+            // Display participant with total costs
+            p.innerHTML = `${participant} - Total Costs: €${totalCost.toFixed(2)} <br> Costs: <br>`;
+
             // Check if there are any costs before displaying
             if (costs.length > 0) {
-                // Create cost display with delete buttons
+                // Create cost display with delete buttons for each cost
                 costs.forEach((cost, index) => {
                     const costItem: HTMLDivElement = document.createElement("div");
                     costItem.innerHTML = `€${cost.amount.toFixed(2)} on ${cost.date} for ${cost.description}`;
 
-                    // Create and append the delete button
-                    const deleteButton: HTMLButtonElement = document.createElement("button");
+                    // Create a delete button for each cost
+                    let deleteButton: HTMLButtonElement = document.createElement("button");
                     deleteButton.innerText = "Delete";
-                    deleteButton.addEventListener("click", () => {
-                        try {
-                            console.log(`Delete button clicked for: ${participant}, index: ${index}`); // Debugging log
-                            deleteCost(participant, index);
-                        }
-                        catch (error) {
-                            console.error("Error during delete action:", error);
-                        }
-                    });
-                    costItem.appendChild(deleteButton); // Append button to the cost item
+
+                    // Append the delete button to the cost item
+                    costItem.appendChild(deleteButton);
                     p.appendChild(costItem); // Append cost item to participant paragraph
+
+                    // Add event listener to the delete button for each cost item
+                    deleteButton.addEventListener("click", () => {
+                        console.log(`Delete clicked for cost: ${cost.description}`);
+                        deleteCost(participant, index);
+                        window.location.reload();
+                    });
                 });
             } else {
                 // Indicate that there are no costs
                 p.innerHTML += "No costs recorded.";
             }
-
-            // Display participant with total costs
-            p.innerHTML += `<br>${participant} - Total Costs: €${totalCost.toFixed(2)} <br> Costs: <br>`;
-            participantsContainer.appendChild(p); // Add participant info to the container
+            participantsContainer?.appendChild(p);
         });
+
     }
 
     // Remove participant button click event listener

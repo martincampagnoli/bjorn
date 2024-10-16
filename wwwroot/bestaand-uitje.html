@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,9 +7,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <h1>Results</h1>
-
     <nav class="navbar">
         <ul>
             <li><a href="index.html">home</a></li>
@@ -18,8 +15,6 @@
             <li><a href="bestaand-uitje.html">bestaand uitje</a></li>
         </ul>
     </nav>
-
-
     <main>
         <h3>bestaand uitje</h3>
         <p id="eventName">Event name:</p>
@@ -32,56 +27,36 @@
         <h3>participant list:</h3> 
         <!-- Add a fieldset to mimic the "nieuw-uitje" style -->
         <fieldset>
-            
             <label for="newParticipantName">Nieuwe deelnemer naam:</label>
             <input type="text" id="newParticipantName" placeholder="Vul naam in" />
-    
             <button id="addParticipantButton">Deelnemer toevoegen</button>
         </fieldset>
 
         <fieldset>
-        
            <label for="removeParticipantName">Deelnemer naam om te verwijderen:</label>
            <input type="text" id="removeParticipantName" placeholder="Vul naam in" />
-
            <button id="removeParticipantButton">Deelnemer verwijderen</button>
        </fieldset> 
 
        <fieldset>
-        <label for="costParticipantName">Deelnemer naam voor kosten:</label>
-        <input type="text" id="costParticipantName" placeholder="vul naam in"/>
+            <label for="costParticipantName">Deelnemer naam voor kosten:</label>
+            <input type="text" id="costParticipantName" placeholder="vul naam in"/>
 
-        <label for="costAmount">Kosten bedrag:</label>
-        <input type="number" id="costAmount" placeholder="Vul bedrag in" />
+            <label for="costAmount">Kosten bedrag:</label>
+            <input type="number" id="costAmount" placeholder="Vul bedrag in" />
 
-        <label for="costDate">Datum van kosten:</label>
-        <input type="date" id="costDate" required />
-        
-        <label for="costDescription">Omschrijving van kosten:</label>
-        <input type="text" id="costDescription" placeholder="Vul omschrijving in" required />
+            <label for="costDate">Datum van kosten:</label>
+            <input type="date" id="costDate" required />
+            
+            <label for="costDescription">Omschrijving van kosten:</label>
+            <input type="text" id="costDescription" placeholder="Vul omschrijving in" required />
 
-        <button id="addCostButton">kosten toevoegen</button>
-
-
-        
-
-
+            <button id="addCostButton">kosten toevoegen</button>
         </fieldset>
-
-        <div id="participantsContainer"></div> <!-- This will hold the participant names and their costs -->
-
+        <!-- This will hold the participant names and their costs -->   
+        <div id="participantsContainer"></div> 
     </main>
-
-   
-
-     
-
-    
-    
-</main>
-
-    <script src="../src/showExisitingEvent.ts" type="module"></script>
+    <script src="../src/showExistingEvent.ts" type="module"></script>
 </body>
-
 </html>
 

@@ -14,8 +14,6 @@
         "eslint": "eslint ./src"
     },
     "dependencies": {
-        "@hboictcloud/eslint-plugin": "^2.x",
-        "@hboictcloud/eslint-plugin-dokkie": "^1.x",
         "@types/node": "^20.x",
         "eslint": "9.9.0",
         "glob": "11.0.0",

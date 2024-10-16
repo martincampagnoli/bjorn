@@ -1,77 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>nieuw uitje </title>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="style.css">
+        <title>nieuw uitje </title>
 
-</head>
+    </head>
+    <body>
+        <nav class="navbar">
+            <ul>
+            <li><a href="index.html">home</a></li>
+            <li><a href="nieuw-uitje.html">nieuw uitje</a></li>
+            <li><a href="bestaand-uitje.html">Bestaand uitje</a></li>
+            </ul>
+        </nav>
+        <h1>Split the bill</h1>
+        <main>
+            <br>
+            <br>
+            <br>
+            <div id="box1">
+                <br>
+                <br>
+                <h4>gegevens invullen</h4>
+                <br>
+                <br>
+            <fieldset>
+                <legend>vul de onderstaande gegevens in</legend>
 
-<body>
+                <label for="eventName">Uitje naam:</label>
+                <input type="text" id="eventName" placeholder="vul de naam in" required/>
 
+                <label for="amountOfPersons">aantal personen: </label>
+                <input type="number" id="amountOfPersons" placeholder="Aantal personen" required min="1"/>
 
-<nav class="navbar">
-    <ul>
-     <li><a href="index.html">home</a></li>
-    <li><a href="nieuw-uitje.html">nieuw uitje</a></li>
-    <li><a href="bestaand-uitje.html">Bestaand uitje</a></li>
-    </ul>
-</nav>
+                <label for="amount">Bedrag</label>
+                <input type="number" id="amount" placeholder="Bedrag" required min="0" step="0,01"/>
 
-<h1>Split the bill</h1>
-<main>
+                <label for="tip">Fooi</label>
+                <input type="number" id="tip" placeholder="fooi" min="0" step="0,01"/>
 
-<br>
-<br>
-<br>
+                <button id="generateFieldsButton">Genereer deelnemer velden</button>
 
-<div id="box1">
-    <br>
-    <br>
-    <h4>gegevens invullen</h4>
-    
-    <br>
-    <br>
-<fieldset>
-    <legend>vul de onderstaande gegevens in</legend>
-
-    <label for="eventName">Uitje naam:</label>
-    <input type="text" id="eventName" placeholder="vul de naam in" required/>
-
-    <label for="amountOfPersons">aantal personen: </label>
-    <input type="number" id="amountOfPersons" placeholder="Aantal personen" required min="1"/>
-
-    <label for="amount">Bedrag</label>
-    <input type="number" id="amount" placeholder="Bedrag" required min="0" step="0,01"/>
-
-    <label for="tip">Fooi</label>
-    <input type="number" id="tip" placeholder="fooi" min="0" step="0,01"/>
-
-    <button id="generateFieldsButton">Genereer deelnemer velden</button>
-
-<!-- placeholder where participant input fields will be generated -->
-<div id="participantsContainer"></div>
-<br>
-<br>
-<br>
+                <!-- placeholder where participant input fields will be generated -->
+                <div id="participantsContainer"></div>
+                <br>
+                <br>
+                <br>
 
 
-<button id="submitButton">verzenden</button>
-</fieldset>
-</div>
-
-
-
-
-</main>
-<br>
-<br>
-<br>
-<img src="split the bill.jpg">
-    
-<script src="../src/createEvent.ts" type="module"></script>
-
-</body>
+                <button id="submitButton">verzenden</button>
+            </fieldset>
+            </div>
+        </main>
+        <br>
+        <br>
+        <br>
+        <img src="split the bill.jpg">
+        <script src="../src/createEvent.ts" type="module"></script>
+    </body>
 </html>
 
