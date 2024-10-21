@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Existing event</title> 
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h1>Results</h1>
+
+    <nav class="navbar">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="create-events.html">New event</a></li>
+            <li><a href="existing-events.html">Existing event </a></li>
+        </ul>
+    </nav>
+
+
+    <main>
+        <div id="box1">
+            <br>
+            <br>
+            <h4>Event Details</h4>
+            <br>
+            <br>
+            <fieldset>
+        
+                <p id="eventName">Event name: <strong>Your Event Name Here</strong></p>
+                <p id="amountOfPersons">Amount of people: <strong>Number of People</strong></p>
+                <p id="totalAmount">Total amount: <strong>$Total Amount</strong></p>
+                <p id="tipPercentage">Tip %: <strong>Tip Percentage</strong></p>
+                <p id="totalAmountWithTip">Total amount (with tip %): <strong>$Total with Tip</strong></p>
+                <p id="amountPerPerson">Amount per person: <strong>$Amount Per Person</strong></p>
+            </fieldset>
+        </div>
+        
+ <div id="box1">
+        <h4>Add cost to participant:</h4>
+
+    <fieldset>
+
+        <div class="cost-management">
+        <label for="costParticipantName">select Name:</label>
+            <!-- Dropdown for selecting participants -->
+            <select id="costParticipantSelect">
+            <!-- Options will be dynamically populated -->
+            </select>
+            </div>
+    
+        <div class="cost-management">
+            <label for="costAmount">Cost:</label>
+            <input type="number" id="costAmount" placeholder="fill in amount" />
+        </div>
+    
+        <div class="cost-management">
+            <label for="costDate">Date:</label>
+            <input type="date" id="costDate" required />
+        </div>
+
+        <div class="cost-management">
+            <label for="costDescription">Describe cost:</label>
+            <input type="text" id="costDescription" placeholder="reason for cost" required />
+        </div>
+
+        <div class="cost-management-buttons">
+            <button id="addCostButton">Add cost</button>
+        </div>
+
+
+        <div id="participantsContainer"></div> <!-- This will hold the participant names and their costs -->
+
+        <div id="overUnderPaymentsSection"></div>
+            
+        </div>
+    </div>
+    </fieldset>
+
+        <div id="box1">
+            <h4>Manage participants</h4>
+            <!-- Other event details here -->
+        
+        <!-- Add a fieldset to mimic the "nieuw-uitje" style -->
+    <fieldset>
+        
+
+        <div class="participant-management">
+            <label for="newParticipantName">New participant :</label>
+            <input type="text" id="newParticipantName" placeholder="fill in name" />
+            <button id="addParticipantButton">Add</button>
+        
+           <label for="removeParticipantName">Delete participant:</label>
+           <input type="text" id="removeParticipantName" placeholder="fill in name" />
+           <button id="removeParticipantButton">Delete</button>
+        </div>
+    </fieldset> 
+    </div>
+
+   
+    
+    <div id="box1">
+            <h4>over- or underpayed</h4>
+            <br>
+            
+            <div id="overUnderPayments"></div>
+            <button id="calculateButton">Calculate Over/Under Payments</button>
+
+    <script src="../src/showExisitingEvent.ts" type="module"></script>
+</main>
+
+</body>
+
+</html>
+
+

@@ -1,5 +1,36 @@
+.cost-management {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+    gap: 10px; /* Adds space between labels and inputs */
+}
 
-  body{
+.cost-management label {
+    margin-right: 10px;
+}
+
+.cost-management-buttons {
+    display: flex;
+    justify-content: center; /* Center the button */
+    margin-top: 20px;
+}
+
+.participant-management {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    gap: 10px; /* Adds space between the buttons */
+}
+
+.participant-management label {
+    margin-right: 10px;
+}
+ 
+ 
+ 
+ body{
     
     background-image: url(background-picture.avif);
     background-repeat: no-repeat;

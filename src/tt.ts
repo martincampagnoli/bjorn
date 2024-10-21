@@ -23,7 +23,7 @@ function showExistingEvent(): void {
     const newParticipantInput: HTMLInputElement = document.getElementById("newParticipantName") as HTMLInputElement;
     const removeParticipantButton: HTMLButtonElement = document.getElementById("removeParticipantButton") as HTMLButtonElement;
     const removeParticipantInput: HTMLInputElement = document.getElementById("removeParticipantName") as HTMLInputElement;
-    const costParticipantNameInput: HTMLInputElement = document.getElementById("costParticipantName") as HTMLInputElement;
+    const costParticipantSelect: HTMLSelectElement = document.getElementById("costParticipantSelect") as HTMLSelectElement;
     const costAmountInput: HTMLInputElement = document.getElementById("costAmount") as HTMLInputElement;
     const addCostButton: HTMLButtonElement = document.getElementById("addCostButton") as HTMLButtonElement;
 
@@ -41,9 +41,13 @@ function showExistingEvent(): void {
 
     // parse participants and costs from localstorage
     const participants: string[] = JSON.parse(localStorageParticipants) as string [];
+    console.log("Participants array:", participants);
 
     // Use the ParticipantCosts type for participantCosts
     let participantCosts: ParticipantCosts = JSON.parse(localStorageParticipantCosts) as ParticipantCosts;
+
+    // call the function to populate the dropdown immediately after retrieving participants
+    populateParticipantDropdown();
 
     // Calculate tip and total amount with tip
     const tip: number = parseFloat(localStorageTip) / 100 + 1;
@@ -60,47 +64,48 @@ function showExistingEvent(): void {
 
     // Function to display participants
     function displayParticipants(): void {
-       participants.forEach(participant => {
+        participantsContainer.innerHTML = ""; // Clear previous list
+        let grandTotal: number = 0; // initialize grand total
+
+        participants.forEach(participant => {
             const p: HTMLElement = document.createElement("p");
             const costs: CostDetails[] = participantCosts[participant] || []; // Ensure it retrieves costs
 
             // Calculate total cost for the participant
             const totalCost: number = costs.reduce((sum, cost) => sum + cost.amount, 0);
+            grandTotal += totalCost; // add to grand total
 
-            // Display participant with total costs
-            p.innerHTML = `${participant} - Total Costs: €${totalCost.toFixed(2)} <br> Costs: <br>`;
+            // Display participant with total costs first
+            p.innerHTML += `<strong>${participant} - Total Costs: €${totalCost.toFixed(2)}</strong><br> Costs:<br>`;
 
             // Check if there are any costs before displaying
             if (costs.length > 0) {
-                // Create cost display with delete buttons for each cost
+                // Create cost display with delete buttons
                 costs.forEach((cost, index) => {
                     const costItem: HTMLDivElement = document.createElement("div");
-                    costItem.innerHTML = `€${cost.amount.toFixed(2)} on ${cost.date} for ${cost.description}`;
+                    costItem.innerHTML = `€${cost.amount.toFixed(2)} on ${cost.date} for ${cost.description})`;
 
-                    // Create a delete button for each cost
-                    let deleteButton: HTMLButtonElement = document.createElement("button");
+                    // Create and append the delete button
+                    const deleteButton: HTMLButtonElement = document.createElement("button");
                     deleteButton.innerText = "Delete";
+                    deleteButton.id = `delete-btn-${index}-${participant}`; // Use index to identify the button
 
-                    // Append the delete button to the cost item
-                    costItem.appendChild(deleteButton);
+                    costItem.appendChild(deleteButton); // Append button to the cost item
                     p.appendChild(costItem); // Append cost item to participant paragraph
-
-                    // Add event listener to the delete button for each cost item
-                    deleteButton.addEventListener("click", () => {
-                        console.log(`Delete clicked for cost: ${cost.description}`);
-                        deleteCost(participant, index);
-                        window.location.reload();
-                    });
                 });
-            } else {
+            }
+            else {
                 // Indicate that there are no costs
                 p.innerHTML += "No costs recorded.";
             }
-            participantsContainer?.appendChild(p);
+            participantsContainer.appendChild(p); // Add participant info to the container
         });
 
+        // Display grand total amount at the end of the participant list
+        const grandTotalElement: HTMLDivElement = document.createElement("div");
+        grandTotalElement.innerHTML = `<strong>Grand Total for All Participants: €${grandTotal.toFixed(2)}</strong>`;
+        participantsContainer.appendChild(grandTotalElement); // Append grand total to the container
     }
-
     // Remove participant button click event listener
     removeParticipantButton.addEventListener("click", () => {
         console.log("Remove button clicked"); // Debugging log
@@ -126,10 +131,12 @@ function showExistingEvent(): void {
 
             // Display the updated participants list
             displayParticipants();
+            populateParticipantDropdown(); // Update dropdown
 
             // Clear the input field after removing
             removeParticipantInput.value = "";
-        } else {
+        }
+        else {
             alert("Please enter a valid participant name to remove.");
         }
     });
@@ -137,7 +144,7 @@ function showExistingEvent(): void {
     // Display the updated participants list
     displayParticipants();
 
-    function deleteCost(participant: string, index: number): void {
+    function (participant: string, index: number): void {
         console.log(`Deleting cost for participant: ${participant}, index: ${index}`); // Debugging log
         // Check if the participant exists in the participantCosts object
         if (participantCosts[participant]) {
@@ -180,6 +187,7 @@ function showExistingEvent(): void {
 
             // Display the updated participants list
             displayParticipants();
+            populateParticipantDropdown(); // Update dropdown
 
             // Clear the input field after adding
             newParticipantInput.value = "";
@@ -192,7 +200,7 @@ function showExistingEvent(): void {
 
     // Add cost button click event listener
     addCostButton.addEventListener("click", () => {
-        const costParticipantName: string = costParticipantNameInput.value.trim();
+        const costParticipantName: string = costParticipantSelect.value;
         const costAmountValue: number = parseFloat(costAmountInput.value.trim());
         const costDate: string = costDateInput.value.trim();
         const costDescription: string = costDescriptionInput.value.trim();
@@ -216,7 +224,7 @@ function showExistingEvent(): void {
             displayParticipants();
 
             // Clear the input fields after adding costs
-            costParticipantNameInput.value = "";
+            costParticipantSelect.selectedIndex = 0; // Reset the dropdown selection to the default option
             costAmountInput.value = "";
             costDateInput.value = "";
             costDescriptionInput.value = "";
@@ -225,6 +233,202 @@ function showExistingEvent(): void {
             alert("Please enter a valid participant name and a non-negative cost.");
         }
     });
+
+    function populateParticipantDropdown(): void {
+        // Clear previous options
+        costParticipantSelect.innerHTML = "";
+
+        // Log the dropdown element and the participants array
+        console.log("Dropdown element:", costParticipantSelect); // Log the dropdown element
+        console.log("Participants for dropdown:", participants); // Log the participants array
+
+        // Add default "Select participant" option
+        const defaultOption: HTMLOptionElement = document.createElement("option");
+        defaultOption.text = "Select participant";
+        defaultOption.disabled = true;
+        defaultOption.selected = true;
+        costParticipantSelect.add(defaultOption);
+
+        // Populate with participant names
+        participants.forEach(participant => {
+            const option: HTMLOptionElement = document.createElement("option");
+            option.value = participant;
+            option.text = participant;
+            costParticipantSelect.add(option);
+
+            if (participants.length === 0) {
+                const emptyOption: HTMLOptionElement = document.createElement("option");
+                emptyOption.text = "No participants available";
+                emptyOption.disabled = true;
+                costParticipantSelect.add(emptyOption);
+            }
+        });
+    }
+
+    function calculateAmountPerPerson(): number {
+        // Example fixed amount for testing
+        return 50; // Replace with your logic to calculate amount per person
+    }
+
+    function displayOverUnderPayments(amountPerPerson: number): void {
+        const overUnderPaymentsContainer: HTMLElement | null = document.getElementById("overUnderPayments");
+        if (!overUnderPaymentsContainer) return;
+
+        overUnderPaymentsContainer.innerHTML = ""; // Clear previous results
+
+        for (const participant of participants) {
+            const costs: CostDetails[] = participantCosts[participant] || [];
+            const participantTotal: number = costs.reduce((sum, cost) => sum + cost.amount, 0);
+
+            const difference: number = participantTotal - amountPerPerson; // How much they overpaid or underpaid
+
+            let statusMessage: string;
+            if (difference > 0) {
+                statusMessage = `${participant} has overpaid by €${difference.toFixed(2)}`;
+            }
+            else if (difference < 0) {
+                statusMessage = `${participant} has underpaid by €${Math.abs(difference).toFixed(2)}`;
+            }
+            else {
+                statusMessage = `${participant} has paid the exact amount.`;
+            }
+
+            const participantStatusElement: HTMLDivElement = document.createElement("div");
+            participantStatusElement.textContent = statusMessage;
+            overUnderPaymentsContainer.appendChild(participantStatusElement);
+        }
+    }
+
+    // Set up the event listener for the button
+    const calculateButton: HTMLElement | null = document.getElementById("calculateButton");
+    calculateButton.addEventListener("click", () => {
+        const amountPerPerson: number = calculateAmountPerPerson(); // Get the amount per person
+        displayOverUnderPayments(amountPerPerson); // Call the display function
+    });
+
+    // Call the function to display over/under payments
 }
 
 showExistingEvent();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function createEvent(): void {
+    const submitButton: HTMLButtonElement = document.querySelector("#submitButton")!;
+    const eventName: HTMLInputElement = document.getElementById("eventName") as HTMLInputElement;
+    const amountOfPersons: HTMLInputElement = document.getElementById("amountOfPersons") as HTMLInputElement;
+    const amount: HTMLInputElement = document.getElementById("amount") as HTMLInputElement;
+    const tipEvents: HTMLInputElement = document.getElementById("tip") as HTMLInputElement;
+    const participantsContainer: HTMLElement = document.getElementById("participantsContainer")!;
+    const generateFieldsButton: HTMLButtonElement = document.querySelector("#generateFieldsButton")!; // **Add this line**
+
+    // Function to validate and highlight empty fields
+    const validateField: (field: HTMLInputElement) => boolean = field => {
+        if (!field.value.trim()) {
+            field.style.border = "2px solid red"; // Highlight empty field
+            return false;
+        } else {
+            field.style.border = ""; // Remove highlight for non-empty field
+            return true;
+        }
+    };
+
+    // Generate participant fields based on number of participants
+    generateFieldsButton.addEventListener("click", () => {
+        localStorage.clear();
+        participantsContainer.innerHTML = ""; // clear previous inputs
+        const numParticipants: number = parseInt(amountOfPersons.value);
+
+        // Ensure at least 2 participants
+        if (numParticipants && numParticipants >= 2) {
+            for (let i: number = 1; i <= numParticipants; i++) {
+                const input: HTMLInputElement = document.createElement("input");
+                input.type = "text";
+                input.placeholder = `Participant ${i} Name`;
+                input.id = `participantName${i}`;
+                participantsContainer.appendChild(input);
+                participantsContainer.appendChild(document.createElement("br"));
+            }
+        } else {
+            alert("Please enter at least 2 participants.");
+        }
+    });
+
+    // **Combined event listener for saving and submitting**
+    submitButton.addEventListener("click", () => {
+        const numParticipants: number = parseInt(amountOfPersons.value);
+
+        // Check if all required fields are filled and number of participants is valid
+        const isEventNameValid: boolean = validateField(eventName);
+        const isAmountOfPersonsValid: boolean = validateField(amount);
+        const isAmountValid: boolean = validateField(amount);
+
+        // Validate all participant names
+        let areParticipantsValid: boolean = true;
+        const participants: Set<string> = new Set();
+        let duplicateFound: boolean = false;
+
+        for (let i: number = 1; i <= numParticipants; i++) {
+            const participantField: HTMLInputElement = document.getElementById(`participantName${i}`) as HTMLInputElement;
+            const participantName: string = participantField.value.trim();
+            const isParticipantValid: boolean = validateField(participantField);
+
+            // Check for empty or duplicate participant names
+            if (!isParticipantValid || participants.has(participantName)) {
+                participantField.style.border = "2px solid red"; // Highlight invalid field
+                alert(`Participant names must be unique and not empty. Please check participant ${i}.`);
+                areParticipantsValid = false;
+                duplicateFound = true;
+                break;
+            } else {
+                participantField.style.border = ""; // Remove highlight if input is valid
+                participants.add(participantName);
+            }
+        }
+
+        // If all fields are valid and no duplicates, proceed to store and redirect
+        if (isEventNameValid && isAmountOfPersonsValid && isAmountValid && areParticipantsValid && !duplicateFound) {
+            const tip: string = tipEvents.value || "0"; // Set default to "0" if no tip is provided
+
+            // Store event details in localStorage
+            localStorage.setItem("eventName", eventName.value);
+            localStorage.setItem("amount", amount.value);
+            localStorage.setItem("amountOfPersons", amountOfPersons.value);
+            localStorage.setItem("tip", tip);
+            localStorage.setItem("participants", JSON.stringify(Array.from(participants)));
+
+            // **Show confirmation message**
+            alert("Deelnemers succesvol opgeslagen en evenement verzonden!");
+
+            // **Redirect to the "bestaand uitje" page**
+            window.location.href = "existing-events.html";
+        } else {
+            alert("Please fill in all required fields and ensure there are no duplicate participant names.");
+        }
+    });
+}
+
+createEvent();

@@ -1,4 +1,4 @@
-function createEvent(): void { 
+function createEvent(): void {
     const submitButton: HTMLButtonElement = document.querySelector("#submitButton")!;
     const eventName: HTMLInputElement = document.getElementById("eventName") as HTMLInputElement;
     const amountOfPersons: HTMLInputElement = document.getElementById("amountOfPersons") as HTMLInputElement;
@@ -20,6 +20,7 @@ function createEvent(): void {
 
     // Generate participant fields based on number of participants
     generateFieldsButton.addEventListener("click", () => {
+        localStorage.clear();
         participantsContainer.innerHTML = ""; // clear previous inputs
         const numParticipants: number = parseInt(amountOfPersons.value);
 
@@ -85,7 +86,7 @@ function createEvent(): void {
             alert("Deelnemers succesvol opgeslagen en evenement verzonden!");
 
             // **Redirect to the "bestaand uitje" page**
-            window.location.href = "bestaand-uitje.html";
+            window.location.href = "existing-events.html";
         } else {
             alert("Please fill in all required fields and ensure there are no duplicate participant names.");
         }
