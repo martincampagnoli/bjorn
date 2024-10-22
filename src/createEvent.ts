@@ -10,7 +10,8 @@ function createEvent(): void {
         if (!field.value.trim()) {
             field.style.border = "2px solid red"; // Highlight empty field
             return false;
-        } else {
+        }
+        else {
             field.style.border = ""; // Remove highlight for non-empty field
             return true;
         }
@@ -32,7 +33,8 @@ function createEvent(): void {
                 participantsContainer.appendChild(input);
                 participantsContainer.appendChild(document.createElement("br"));
             }
-        } else {
+        }
+        else {
             alert("Please enter at least 2 participants.");
         }
     });
@@ -62,7 +64,8 @@ function createEvent(): void {
                 areParticipantsValid = false;
                 duplicateFound = true;
                 break;
-            } else {
+            }
+            else {
                 participantField.style.border = ""; // Remove highlight if input is valid
                 participants.add(participantName);
             }
@@ -80,7 +83,8 @@ function createEvent(): void {
 
             // **Redirect to the "bestaand uitje" page**
             window.location.href = "existing-events.html";
-        } else {
+        }
+        else {
             alert("Please fill in all required fields and ensure there are no duplicate participant names.");
         }
     });

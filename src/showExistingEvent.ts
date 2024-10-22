@@ -3,6 +3,7 @@ interface CostDetails {
     date: string;
     description: string;
     amount: number;
+    tip: number;
 }
 
 // Define the type for participant costs
@@ -22,7 +23,6 @@ function showExistingEvent(): void {
     const removeParticipantInput: HTMLInputElement = document.getElementById("removeParticipantName") as HTMLInputElement;
     const costParticipantSelect: HTMLSelectElement = document.getElementById("costParticipantSelect") as HTMLSelectElement;
     const costAmountInput: HTMLInputElement = document.getElementById("costAmount") as HTMLInputElement;
-    // const costAmountInput: HTMLInputElement = document.getElementById("costAmount") as HTMLInputElement;
     const addCostButton: HTMLButtonElement = document.getElementById("addCostButton") as HTMLButtonElement;
     const eventContainer: HTMLButtonElement = document.getElementById("box1") as HTMLButtonElement;
 
@@ -180,6 +180,10 @@ function showExistingEvent(): void {
                     const newDate: string = (costItem.querySelector("#edit-cost-date") as HTMLInputElement).value;
                     const newDescription: string = (costItem.querySelector("#edit-cost-description") as HTMLInputElement).value;
 
+                    // Get the new tip value, ensuring it defaults to 0 if invalid
+                    const tipInput: string = (costItem.querySelector("#edit-cost-tip") as HTMLInputElement).value;
+                    const newTip: number = !isNaN(parseFloat(tipInput)) && parseFloat(tipInput) >= 0 ? parseFloat(tipInput) : 0; // Ensure it's a valid non-negative number
+
                     // Update the cost details
                     if (
                         participantCosts[participant] &&
@@ -188,6 +192,7 @@ function showExistingEvent(): void {
                             amount: newAmount,
                             date: newDate,
                             description: newDescription,
+                            tip: newTip,
                         };
 
                         // Update localStorage
@@ -206,7 +211,8 @@ function showExistingEvent(): void {
                     displayParticipants();
                 });
             }
-        } else {
+        }
+        else {
             console.log(`No cost found at index ${index} for participant: ${participant}`);
         }
     }
@@ -221,6 +227,7 @@ function showExistingEvent(): void {
             participants.splice(participants.indexOf(participantToRemove), 1);
 
             // Create a new object without the removed participant's costs
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { [participantToRemove]: _, ...updatedParticipantCosts } = participantCosts;
             participantCosts = updatedParticipantCosts; // Assign the updated costs back
 
@@ -237,6 +244,10 @@ function showExistingEvent(): void {
             displayParticipants();
             displayAmountPerPerson();
             populateParticipantDropdown(); // Update dropdown
+
+            // Recalculate the amount per person and refresh over-/under-payment display
+            const amountPerPerson: number = calculateAmountPerPerson(); // Recalculate amount per person
+            displayOverUnderPayments(amountPerPerson); // Update over-/under-paid amounts
 
             // Clear the input field after removing
             removeParticipantInput.value = "";
@@ -268,6 +279,7 @@ function showExistingEvent(): void {
 
                 // If the participant has no more costs, create a new object without that participant
                 if (participantCosts[participant].length === 0) {
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     const { [participant]: _, ...updatedParticipantCosts } = participantCosts;
                     participantCosts = updatedParticipantCosts; // Assign the updated costs back
                 }
@@ -278,9 +290,14 @@ function showExistingEvent(): void {
                 // Refresh the displayed participants and their costs
                 displayParticipants();
 
+                // Refresh the over-/under-payment display
+                const amountPerPerson: number = calculateAmountPerPerson(); // Recalculate amount per person
+                displayOverUnderPayments(amountPerPerson); // Update over-/under-paid amounts
+
                 // Notify the user that the cost has been deleted
                 showNotification(`${participant}'s cost at index ${index} has been successfully deleted.`);
-            } else {
+            }
+            else {
                 console.log(`No costs found for participant: ${participant}`); // Debugging log
             }
         }
@@ -329,20 +346,34 @@ function showExistingEvent(): void {
         }
     });
 
-    // Add cost button click event listener
+    // Add cost button click event listener 
     addCostButton.addEventListener("click", () => {
         const costParticipantName: string = costParticipantSelect.value;
         const costAmountValue: number = parseFloat(costAmountInput.value.trim());
-        // const costTipAmount: number = parseFloat(costAmountInput.value.trim());
         const costDate: string = costDateInput.value.trim();
         const costDescription: string = costDescriptionInput.value.trim();
 
+        // Get the optional tip percentage input (if provided)
+        const tipPercentageValue: number = parseFloat((document.getElementById("tipPercentage") as HTMLInputElement).value.trim());
+
+        // Initialize the total amount with the base cost
+        let totalAmount: number = costAmountValue;
+
+        // Calculate the tip (if provided) and store it separately
+        let tipAmount: number = 0; // Initialize tipAmount
+        if (!isNaN(tipPercentageValue) && tipPercentageValue > 0) {
+            tipAmount = (costAmountValue * tipPercentageValue) / 100; // Calculate the tip amount
+            totalAmount += tipAmount; // Add tip to total amount
+        }
+
+        // Ensure all required fields are valid
         if (costParticipantName && participants.includes(costParticipantName) && !isNaN(costAmountValue) && costAmountValue >= 0 && costDate && costDescription) {
-            // Create an object for the new cost
+        // Create an object for the new cost with the totalAmount (including tip, if applicable)
             const newCostDetail: CostDetails = {
                 date: costDate,
                 description: costDescription,
-                amount: costAmountValue,
+                amount: totalAmount,  // Store the total amount (with tip included)
+                tip: tipAmount,        // Store the tip amount separately
             };
 
             // Directly initialize if not present using logical nullish assignment
@@ -355,13 +386,15 @@ function showExistingEvent(): void {
             // Display the updated participants list
             displayParticipants();
 
-            // Clear the input fields after adding costs
+            // Clear the input fields after adding the cost
             costParticipantSelect.selectedIndex = 0; // Reset the dropdown selection to the default option
             costAmountInput.value = "";
             costDateInput.value = "";
             costDescriptionInput.value = "";
-        }
-        else {
+
+            // Clear the optional tip field as well
+            (document.getElementById("tipPercentage") as HTMLInputElement).value = "";
+        } else {
             alert("Please enter a valid participant name and a non-negative cost.");
         }
     });
@@ -425,9 +458,11 @@ function showExistingEvent(): void {
             let statusMessage: string;
             if (difference > 0) {
                 statusMessage = `${participant} has overpaid by €${difference.toFixed(2)}`;
-            } else if (difference < 0) {
+            }
+            else if (difference < 0) {
                 statusMessage = `${participant} has underpaid by €${Math.abs(difference).toFixed(2)}`;
-            } else {
+            }
+            else {
                 statusMessage = `${participant} has paid the exact amount.`;
             }
 
@@ -441,8 +476,8 @@ function showExistingEvent(): void {
         for (const p1 in paymentStatus) {
             for (const p2 in paymentStatus) {
                 if (paymentStatus[p1] > 0 && paymentStatus[p2] < 0) { // p1 overpaid and p2 underpaid
-                    const amountToPay: number
-                    = Math.min(paymentStatus[p1], Math.abs(paymentStatus[p2]));
+                    const amountToPay: number =
+                    Math.min(paymentStatus[p1], Math.abs(paymentStatus[p2]));
                     transactions.push(`${p2} needs to pay €${amountToPay.toFixed(2)} to ${p1}.`);
                     paymentStatus[p1] -= amountToPay; // Reduce the overpaid amount
                     paymentStatus[p2] += amountToPay; // Reduce the underpaid amount
@@ -461,7 +496,8 @@ function showExistingEvent(): void {
                 transactionElement.textContent = transaction;
                 overUnderPaymentsContainer.appendChild(transactionElement);
             });
-        } else {
+        }
+        else {
             const noTransactionsElement: HTMLDivElement = document.createElement("div");
             noTransactionsElement.textContent = "No payments required.";
             overUnderPaymentsContainer.appendChild(noTransactionsElement);
