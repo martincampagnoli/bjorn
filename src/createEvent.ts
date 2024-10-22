@@ -2,8 +2,6 @@ function createEvent(): void {
     const submitButton: HTMLButtonElement = document.querySelector("#submitButton")!;
     const eventName: HTMLInputElement = document.getElementById("eventName") as HTMLInputElement;
     const amountOfPersons: HTMLInputElement = document.getElementById("amountOfPersons") as HTMLInputElement;
-    const amount: HTMLInputElement = document.getElementById("amount") as HTMLInputElement;
-    const tipEvents: HTMLInputElement = document.getElementById("tip") as HTMLInputElement;
     const participantsContainer: HTMLElement = document.getElementById("participantsContainer")!;
     const generateFieldsButton: HTMLButtonElement = document.querySelector("#generateFieldsButton")!; // **Add this line**
 
@@ -45,8 +43,7 @@ function createEvent(): void {
 
         // Check if all required fields are filled and number of participants is valid
         const isEventNameValid: boolean = validateField(eventName);
-        const isAmountOfPersonsValid: boolean = validateField(amount);
-        const isAmountValid: boolean = validateField(amount);
+        const isAmountOfPersonsValid: boolean = validateField(amountOfPersons);
 
         // Validate all participant names
         let areParticipantsValid: boolean = true;
@@ -72,18 +69,14 @@ function createEvent(): void {
         }
 
         // If all fields are valid and no duplicates, proceed to store and redirect
-        if (isEventNameValid && isAmountOfPersonsValid && isAmountValid && areParticipantsValid && !duplicateFound) {
-            const tip: string = tipEvents.value || "0"; // Set default to "0" if no tip is provided
-
+        if (isEventNameValid && isAmountOfPersonsValid && areParticipantsValid && !duplicateFound) {
             // Store event details in localStorage
             localStorage.setItem("eventName", eventName.value);
-            localStorage.setItem("amount", amount.value);
             localStorage.setItem("amountOfPersons", amountOfPersons.value);
-            localStorage.setItem("tip", tip);
             localStorage.setItem("participants", JSON.stringify(Array.from(participants)));
 
             // **Show confirmation message**
-            alert("Deelnemers succesvol opgeslagen en evenement verzonden!");
+            alert("participants succesfully saved");
 
             // **Redirect to the "bestaand uitje" page**
             window.location.href = "existing-events.html";

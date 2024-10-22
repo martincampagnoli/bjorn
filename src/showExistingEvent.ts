@@ -14,9 +14,6 @@ function showExistingEvent(): void {
     // Select HTML elements
     const eventName: HTMLElement = document.getElementById("eventName")!;
     const amountOfPersons: HTMLElement = document.getElementById("amountOfPersons")!;
-    const totalAmount: HTMLElement = document.getElementById("totalAmount")!;
-    const tipElement: HTMLElement = document.getElementById("tipPercentage")!;
-    const totalAmountWithTipElement: HTMLElement = document.getElementById("totalAmountWithTip")!;
     const amountPerPersonElement: HTMLElement = document.getElementById("amountPerPerson")!;
     const participantsContainer: HTMLElement = document.getElementById("participantsContainer")!;
     const addParticipantButton: HTMLButtonElement = document.getElementById("addParticipantButton") as HTMLButtonElement;
@@ -25,7 +22,9 @@ function showExistingEvent(): void {
     const removeParticipantInput: HTMLInputElement = document.getElementById("removeParticipantName") as HTMLInputElement;
     const costParticipantSelect: HTMLSelectElement = document.getElementById("costParticipantSelect") as HTMLSelectElement;
     const costAmountInput: HTMLInputElement = document.getElementById("costAmount") as HTMLInputElement;
+    // const costAmountInput: HTMLInputElement = document.getElementById("costAmount") as HTMLInputElement;
     const addCostButton: HTMLButtonElement = document.getElementById("addCostButton") as HTMLButtonElement;
+    const eventContainer: HTMLButtonElement = document.getElementById("box1") as HTMLButtonElement;
 
     // Voeg de nieuwe selectie van elementen toe voor de datum en omschrijving
     const costDateInput: HTMLInputElement = document.getElementById("costDate") as HTMLInputElement;
@@ -33,8 +32,7 @@ function showExistingEvent(): void {
 
     // Retrieve event data from localStorage
     const localStorageEventName: string = localStorage.getItem("eventName") || "Unnamed Event";
-    const localStorageAmount: string = localStorage.getItem("amount") || "0";
-    const localStorageTip: string = localStorage.getItem("tip") || "0";
+    const localStorageGrandTotal: string = localStorage.getItem("grandTotal") || "0";
     const localStorageAmountOfPersons: string = localStorage.getItem("amountOfPersons") || "1";
     const localStorageParticipants: string = localStorage.getItem("participants") || "[]"; // Retrieve participants data
     const localStorageParticipantCosts: string = localStorage.getItem("participantCosts") || "{}"; // Retrieve participants costs
@@ -50,46 +48,23 @@ function showExistingEvent(): void {
     populateParticipantDropdown();
 
     // Calculate tip and total amount with tip
-    const tip: number = parseFloat(localStorageTip) / 100 + 1;
-    const totalAmountWithTip: number = parseFloat(localStorageAmount) * tip;
-    const amountPerPerson: number = totalAmountWithTip / parseInt(localStorageAmountOfPersons);
+    const grandTotal: number = parseFloat(localStorageGrandTotal);
+    const amountPerPerson: number = grandTotal / parseInt(localStorageAmountOfPersons);
 
     // Display the retrieved and calculated data with labels
     eventName.innerHTML = `Event Name: ${localStorageEventName}`;
     amountOfPersons.innerHTML = `Amount of people: ${localStorageAmountOfPersons}`;
-    totalAmount.innerHTML = `Total amount (without tip): ${parseFloat(localStorageAmount).toFixed(2)}`;
-    tipElement.innerHTML = `Total tip: ${localStorageTip + "%"}`;
-    totalAmountWithTipElement.innerHTML = `Total amount (with tip): ${totalAmountWithTip.toFixed(2)}`;
     amountPerPersonElement.innerHTML = `Amount per Person (with tip): ${amountPerPerson.toFixed(2)}`;
 
-    participantsContainer.addEventListener("click", (event: Event) => {
-        const target: HTMLElement = event.target as HTMLElement;
-    
-        if (target.matches("button[id^='delete-btn-']")) {
-            // Handle delete button clicks
-            target.setAttribute("disabled", "true"); // Disable the button to prevent multiple clicks
-    
-            const idParts: string[] = target.id.split("-");
-            const index: string = idParts[2];
-            const participant: string = idParts.slice(3).join("-");
-            console.log(`Delete button clicked for participant: ${participant}, index: ${index}`);
-            try {
-                deleteCost(participant, parseInt(index)); // Call deleteCost function
-            } catch (error) {
-                console.error("Error during delete action:", error);
-            }
-        } else if (target.matches("button[id^='edit-btn-']")) {
-            // Handle edit button clicks
-            const idParts: string[] = target.id.split("-");
-            const index: string = idParts[2];
-            const participant: string = idParts.slice(3).join("-");
-            console.log(`Edit button clicked for participant: ${participant}, index: ${index}`);
-            editCost(participant, parseInt(index)); // Call editCost function
-        }
-    });
-    // After the move, your code should look like this:
-    // typescript
-    // Copy code
+    function displayAmountPerPerson(): void {
+        const localStorageAmountOfPersons: string = localStorage.getItem("amountOfPersons") || "1";
+        const localStorageGrandTotal: string = localStorage.getItem("grandTotal") || "0";
+        const grandTotal: number = parseFloat(localStorageGrandTotal);
+        const amountPerPerson: number = grandTotal / parseInt(localStorageAmountOfPersons);
+        amountOfPersons.innerHTML = `Amount of people: ${localStorageAmountOfPersons}`;
+        amountPerPersonElement.innerHTML = `Amount per Person (with tip): ${amountPerPerson.toFixed(2)}`;
+    }
+
     // Function to display participants
     function displayParticipants(): void {
         participantsContainer.innerHTML = ""; // Clear previous list
@@ -127,7 +102,8 @@ function showExistingEvent(): void {
                     costItem.appendChild(deleteButton); // Append button to the cost item
                     p.appendChild(costItem); // Append cost item to participant paragraph
                 });
-            } else {
+            }
+            else {
                 // Indicate that there are no costs
                 p.innerHTML += "No costs recorded.";
             }
@@ -135,9 +111,13 @@ function showExistingEvent(): void {
         });
 
         // Display grand total amount at the end of the participant list
+        document.getElementById("grand-total")?.remove();
         const grandTotalElement: HTMLDivElement = document.createElement("div");
+        grandTotalElement.id = "grand-total";
         grandTotalElement.innerHTML = `<strong>Grand Total for All Participants: €${grandTotal.toFixed(2)}</strong>`;
-        participantsContainer.appendChild(grandTotalElement); // Append grand total to the container
+        eventContainer.appendChild(grandTotalElement); // Append grand total to the container
+        localStorage.setItem("grandTotal", grandTotal.toFixed(2));
+        displayAmountPerPerson();
     }
 
     // Move this block outside `displayParticipants` so it only runs once
@@ -154,10 +134,12 @@ function showExistingEvent(): void {
             console.log(`Delete button clicked for participant: ${participant}, index: ${index}`);
             try {
                 deleteCost(participant, parseInt(index)); // Call deleteCost function
-            } catch (error) {
+            }
+            catch (error) {
                 console.error("Error during delete action:", error);
             }
-        } else if (target.matches("button[id^='edit-btn-']")) {
+        }
+        else if (target.matches("button[id^='edit-btn-']")) {
             // Handle edit button clicks
             const idParts: string[] = target.id.split("-");
             const index: string = idParts[2];
@@ -213,7 +195,8 @@ function showExistingEvent(): void {
 
                         // Refresh the display
                         displayParticipants();
-                    } else {
+                    }
+                    else {
                         alert("Please enter valid values.");
                     }
                 });
@@ -252,6 +235,7 @@ function showExistingEvent(): void {
 
             // Display the updated participants list
             displayParticipants();
+            displayAmountPerPerson();
             populateParticipantDropdown(); // Update dropdown
 
             // Clear the input field after removing
@@ -266,6 +250,7 @@ function showExistingEvent(): void {
     displayParticipants();
 
     function deleteCost(participant: string, index: number): void {
+        console.log("Delete cost called for:", participant, index); // Debugging log
         // Ensure the confirmation dialog only appears once
         const userConfirmed: boolean = confirm(`Are you sure you want to delete the cost for ${participant}?`);
 
@@ -348,6 +333,7 @@ function showExistingEvent(): void {
     addCostButton.addEventListener("click", () => {
         const costParticipantName: string = costParticipantSelect.value;
         const costAmountValue: number = parseFloat(costAmountInput.value.trim());
+        // const costTipAmount: number = parseFloat(costAmountInput.value.trim());
         const costDate: string = costDateInput.value.trim();
         const costDescription: string = costDescriptionInput.value.trim();
 
@@ -412,8 +398,11 @@ function showExistingEvent(): void {
     }
 
     function calculateAmountPerPerson(): number {
-        // Example fixed amount for testing
-        return 50; // Replace with your logic to calculate amount per person
+        const localStorageAmountOfPersons: string = localStorage.getItem("amountOfPersons") || "1";
+        const localStorageGrandTotal: string = localStorage.getItem("grandTotal") || "0";
+        const grandTotal: number = parseFloat(localStorageGrandTotal);
+        const amountPerPerson: number = grandTotal / parseInt(localStorageAmountOfPersons);
+        return amountPerPerson;
     }
 
     function displayOverUnderPayments(amountPerPerson: number): void {
@@ -422,20 +411,23 @@ function showExistingEvent(): void {
 
         overUnderPaymentsContainer.innerHTML = ""; // Clear previous results
 
+        // Create an object to hold the overpaid and underpaid amounts
+        const paymentStatus: Record<string, number> = {};
+
+        // Calculate how much each participant overpaid or underpaid
         for (const participant of participants) {
             const costs: CostDetails[] = participantCosts[participant] || [];
             const participantTotal: number = costs.reduce((sum, cost) => sum + cost.amount, 0);
-
             const difference: number = participantTotal - amountPerPerson; // How much they overpaid or underpaid
+
+            paymentStatus[participant] = difference; // Store the amount in the paymentStatus object
 
             let statusMessage: string;
             if (difference > 0) {
                 statusMessage = `${participant} has overpaid by €${difference.toFixed(2)}`;
-            }
-            else if (difference < 0) {
+            } else if (difference < 0) {
                 statusMessage = `${participant} has underpaid by €${Math.abs(difference).toFixed(2)}`;
-            }
-            else {
+            } else {
                 statusMessage = `${participant} has paid the exact amount.`;
             }
 
@@ -443,16 +435,46 @@ function showExistingEvent(): void {
             participantStatusElement.textContent = statusMessage;
             overUnderPaymentsContainer.appendChild(participantStatusElement);
         }
+
+        // Calculate who owes whom and display the transactions
+        const transactions: string[] = [];
+        for (const p1 in paymentStatus) {
+            for (const p2 in paymentStatus) {
+                if (paymentStatus[p1] > 0 && paymentStatus[p2] < 0) { // p1 overpaid and p2 underpaid
+                    const amountToPay: number
+                    = Math.min(paymentStatus[p1], Math.abs(paymentStatus[p2]));
+                    transactions.push(`${p2} needs to pay €${amountToPay.toFixed(2)} to ${p1}.`);
+                    paymentStatus[p1] -= amountToPay; // Reduce the overpaid amount
+                    paymentStatus[p2] += amountToPay; // Reduce the underpaid amount
+                }
+            }
+        }
+
+        // Display payment transactions
+        if (transactions.length > 0) {
+            const transactionsHeader: HTMLDivElement = document.createElement("div");
+            transactionsHeader.textContent = "Payment Transactions:";
+            overUnderPaymentsContainer.appendChild(transactionsHeader);
+
+            transactions.forEach(transaction => {
+                const transactionElement: HTMLDivElement = document.createElement("div");
+                transactionElement.textContent = transaction;
+                overUnderPaymentsContainer.appendChild(transactionElement);
+            });
+        } else {
+            const noTransactionsElement: HTMLDivElement = document.createElement("div");
+            noTransactionsElement.textContent = "No payments required.";
+            overUnderPaymentsContainer.appendChild(noTransactionsElement);
+        }
     }
 
     // Set up the event listener for the button
     const calculateButton: HTMLElement | null = document.getElementById("calculateButton");
-    calculateButton.addEventListener("click", () => {
+    calculateButton?.addEventListener("click", () => {
         const amountPerPerson: number = calculateAmountPerPerson(); // Get the amount per person
+        console.log(amountPerPerson);
         displayOverUnderPayments(amountPerPerson); // Call the display function
     });
-
-    // Call the function to display over/under payments
 }
 
 showExistingEvent();

@@ -1,67 +1,59 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="style.css">
-        <title>New event</title>
+    <!DOCTYPE html>
+    <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <link rel="stylesheet" href="style.css">
+            <title>New event</title>
 
-    </head>
-    <body>
-        <nav class="navbar">
-            <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="create-events.html">New event</a></li>
-            <li><a href="existing-events.html">Existing event</a></li>
-            </ul>
-        </nav>
-        <h1>Split the bill</h1>
-        <main>
+        </head>
+        <body>
+            <nav class="navbar">
+                <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="create-events.html">New event</a></li>
+                <li><a href="existing-events.html">Existing event</a></li>
+                </ul>
+            </nav>
+            <h1>Split the bill</h1>
+            <main>
+                <br>
+                <br>
+                <br>
+                <div id="box1">
+                    <br>
+                    <br>
+                    <h4>your event</h4>
+                    <br>
+                    <br>
+                <fieldset>
+                    <legend>fill in event details</legend>
+
+                    <label for="eventName">Name event:</label>
+                    <input type="text" id="eventName" placeholder="fill in the name" required/>
+                    <br> 
+                    <label for="amountOfPersons">amount of people: </label>
+                    <input type="number" id="amountOfPersons" placeholder="Amount of people" required min="1"/>
+                    <br><br>
+                    <button id="generateFieldsButton">Generate participant field</button>
+
+                    <!-- placeholder where participant input fields will be generated -->
+                    <div id="participantsContainer"></div>
+                    <br>
+                    <br>
+                    <br>
+
+
+                    <button id="submitButton">send event </button>
+                </fieldset>
+                </div>
+            </main>
             <br>
             <br>
             <br>
-            <div id="box1">
-                <br>
-                <br>
-                <h4>your event</h4>
-                <br>
-                <br>
-            <fieldset>
-                <legend>fill in event details</legend>
-
-                <label for="eventName">Name event:</label>
-                <input type="text" id="eventName" placeholder="fill in the name" required/>
-
-               
-
-                <label for="amount">total amount </label>
-                <input type="number" id="amount" placeholder="amount" required min="0" step="0,01"/>
-
-                <label for="tip">tip %: </label>
-                <input type="number" id="tip" placeholder="tip %" min="0" step="0,01"/>
-                <br> 
-                <label for="amountOfPersons">amount of people: </label>
-                <input type="number" id="amountOfPersons" placeholder="Amount of people" required min="1"/>
-                <br><br>
-                <button id="generateFieldsButton">Generate participant field</button>
-
-                <!-- placeholder where participant input fields will be generated -->
-                <div id="participantsContainer"></div>
-                <br>
-                <br>
-                <br>
-
-
-                <button id="submitButton">send event </button>
-            </fieldset>
-            </div>
-        </main>
-        <br>
-        <br>
-        <br>
-        <img src="split the bill.jpg">
-        <script src="../src/createEvent.ts" type="module"></script>
-    </body>
-</html>
+            <img src="split the bill.jpg">
+            <script src="../src/createEvent.ts" type="module"></script>
+        </body>
+    </html>
 
 
