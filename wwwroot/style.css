@@ -1,13 +1,43 @@
 .cost-management {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
     margin-bottom: 15px;
     gap: 10px; /* Adds space between labels and inputs */
 }
 
-.cost-management label {
-    margin-right: 10px;
+/* Center and align form content */
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.cost-management label
+.cost-management input
+.cost-management select {
+    display: block;
+    text-align: left;
+    width: 300px; /* Adjust width as necessary */
+}
+#costParticipantSelect,
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select {
+    width: 250px; /* You can adjust the width as per your design */
+    box-sizing: border-box; /* Ensures padding and border don't affect the width */
+}
+
+/* Ensure inputs take full width under the label */
+input, select {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0;
+    box-sizing: border-box;
 }
 
 .cost-management-buttons {
@@ -26,6 +56,33 @@
 
 .participant-management label {
     margin-right: 10px;
+}
+
+h5 {
+    margin-bottom: 5px; /* Reduces space between <h5> and the following <p> */
+    margin-top: 30px; /* Keep space between the end of the <p> and the next <h5> */
+}
+
+p {
+    margin-top: 5px; /* Reduces space between <p> and the preceding <h5> */
+    margin-bottom: 30px; /* Adds space between <p> and the next <h5> */
+}
+
+.content-wrapper {
+    display: flex;
+    justify-content: space-between; /* Space between text and image */
+    align-items: center; /* Aligns image and text vertically */
+    margin-top: 20px;
+}
+
+.text-content {
+    flex: 1; /* The text takes up remaining space */
+    margin-right: 20px; /* Adds some space between the text and the image */
+}
+
+.image-content img {
+    max-width: 400px; /* Set a max width for the image */
+    height: auto; /* Ensure the image scales proportionally */
 }
  
  
@@ -141,6 +198,10 @@ main{
     padding:0px;
     margin:0px;
     overflow:hidden;
+    display: flex; /* Use flexbox */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    height: 50px; /* Adjust the height as needed */
 }
 .navbar a{
   color:white;
@@ -148,13 +209,17 @@ main{
   padding: 15px;
   display:block;
   text-align:center ;
+  
 }
   
 .navbar a:hover{
     background-color: rgba(192, 190, 190, 0.685);
 }
 .navbar li{
-    float: left;
+    margin: 0 15px; /* Optional: Adjust spacing between menu items */
+    display: flex;
+    align-items: center; /* Vertically centers text */
+
 }
 .container{
     background-color:gray
@@ -172,7 +237,7 @@ main{
 
 }  
 img{
-width: 750px;
+width: 400px;
 display: block;
 margin:auto;
 }
@@ -197,6 +262,8 @@ button {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
+    margin: 10px 10px 10px 0; /* Adds space between buttons horizontally */
+    margin-left: 10px; /* Adds space between the cost and the buttons */
 }
 
 button:hover {

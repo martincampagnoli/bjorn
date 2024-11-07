@@ -37,7 +37,8 @@
         
  <div id="box1">
         <h4>Add cost to participant:</h4>
-
+        
+        <div class="form-container">
     <fieldset>
 
         <div class="cost-management">
@@ -71,8 +72,8 @@
         <div class="cost-management-buttons">
             <button id="addCostButton">Add cost</button>
         </div>
-
-
+        <br><br>
+       
         <div id="participantsContainer"></div> <!-- This will hold the participant names and their costs -->
 
         <div id="overUnderPaymentsSection"></div>
@@ -80,6 +81,7 @@
         </div>
     </div>
     </fieldset>
+</div>
 
         <div id="box1">
             <h4>Manage participants</h4>
@@ -90,16 +92,27 @@
         
 
         <div class="participant-management">
-            <label for="newParticipantName">New participant :</label>
+            <label for="newParticipantName">New participant: </label>
             <input type="text" id="newParticipantName" placeholder="fill in name" />
-            <button id="addParticipantButton">Add</button>
+            
+        </div>
         
+        <div class="participant-management">
+        <button id="addParticipantButton">Add</button>
+        </div>
+
+        <div class="participant-management">
            <label for="removeParticipantName">Delete participant:</label>
            <input type="text" id="removeParticipantName" placeholder="fill in name" />
-           <button id="removeParticipantButton">Delete</button>
+           
+        </div>
+        
+            <div class="participant-management">
+            <button id="removeParticipantButton">Delete</button>
+    
         </div>
     </fieldset> 
-    </div>
+</div>
 
    
     
@@ -109,6 +122,9 @@
             
             <div id="overUnderPayments"></div>
             <button id="calculateButton">Calculate Over/Under Payments</button>
+
+            <button id="shareButton">Share on WhatsApp</button>
+   </div>
 
     <script src="../src/showExistingEvent.ts" type="module"></script>
 </main>

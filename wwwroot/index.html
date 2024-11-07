@@ -23,23 +23,33 @@
                 </li>
             </ul>
         </nav>
+
         <main>
-            <br>
-            <p>Je kunt nu beginnen met het bouwen van de Dokkie-opdracht!</p>
-            <p>
-                In de <code>./wwwroot</code> map vind je alle HTML en CSS. Er zijn twee voorbeeldpagina's, één
-                daarvan is dit bestand!
-            </p>
-            <p>
-                In <code>./src</code> map folder vind je TypeScript-bestanden. TypeScript lijkt op JavaScript en gebruik je om je
-                pagina's interactief te maken.
-            </p>
-            <p>
-                Begin met het maken van <i>user stories</i>, deze vind je op het Agile Board van je
-                Gitlab-repository.
-            </p>      
-            <img src="dokkie.png">
-        </main>
+            <div class="content-wrapper">
+                <div class="text-content">
+                    <h2>What is Dokkie?</h2>
+                    <p>This web page was made to give you and your friends an overview of the costs made during an event. 
+                        This ensures that you do not have to pay too much and that it is distributed fairly</p>
+                    <h5>How does it work?</h5>
+                    <p>first you fill in some simple information about the event on the page "New event". When you click on "send event" it will take you to the page Existing event. At the top of this page it will show you a short breakdown of your event and the total amount spent during your event. </p>
+                    <h5>Adding costs</h5>
+                    <p>The next step is to add costs to your participants. you fill in: the name of the intended participant,
+                       the cost, Date (when was this cost made) and finally you can describe your cost. It is also possible to add a tip, this is optional. You can edit or delete costs aswell.</p>
+                    <h5>Manage participants</h5>
+                    <p>Here you can simply add or delete a participant by filling in their name.</p>
+                    <h5>Payment transactions</h5>
+                    <p>now you now who and what was spent during this event you can calculate how much each participant has payed and how much they should pay, by simply clicking the button "calculate over/under payments". 
+                       This will show you if the participants payed the exact amount, to much or to litlle. then it will show what participant has to pay back and to who he has to pay it or the other way around.
+                   </p> 
+                   <h5>Share with your friends</h5>
+                   <p>It is also possible to share the results of your event on whatsapp. You can let your friends now if they payed the right amount or not.</p>
+                </div>
+
+               <div class="image-content">
+                 <img src="dokkie.png" alt="Dokkie Image">
+               </div>
+           </div>
+       </main>
         <script src="/src/index.ts" type="module"></script>
     </body>
 </html>     
