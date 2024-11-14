@@ -4,10 +4,9 @@
     align-items: center;
     justify-content: center;
     margin-bottom: 15px;
-    gap: 10px; /* Adds space between labels and inputs */
+    gap: 10px; 
 }
 
-/* Center and align form content */
 .form-container {
     display: flex;
     flex-direction: column;
@@ -21,18 +20,17 @@
 .cost-management select {
     display: block;
     text-align: left;
-    width: 300px; /* Adjust width as necessary */
+    width: 300px; 
 }
 #costParticipantSelect,
 input[type="text"],
 input[type="number"],
 input[type="date"],
 select {
-    width: 250px; /* You can adjust the width as per your design */
-    box-sizing: border-box; /* Ensures padding and border don't affect the width */
+    width: 250px; 
+    box-sizing: border-box; 
 }
 
-/* Ensure inputs take full width under the label */
 input, select {
     width: 100%;
     padding: 8px;
@@ -42,7 +40,7 @@ input, select {
 
 .cost-management-buttons {
     display: flex;
-    justify-content: center; /* Center the button */
+    justify-content: center; 
     margin-top: 20px;
 }
 
@@ -51,7 +49,7 @@ input, select {
     justify-content: center;
     align-items: center;
     margin-top: 20px;
-    gap: 10px; /* Adds space between the buttons */
+    gap: 10px;
 }
 
 .participant-management label {
@@ -59,52 +57,47 @@ input, select {
 }
 
 h5 {
-    margin-bottom: 5px; /* Reduces space between <h5> and the following <p> */
-    margin-top: 30px; /* Keep space between the end of the <p> and the next <h5> */
+    margin-bottom: 5px; 
+    margin-top: 30px; 
 }
 
 p {
-    margin-top: 5px; /* Reduces space between <p> and the preceding <h5> */
-    margin-bottom: 30px; /* Adds space between <p> and the next <h5> */
+    margin-top: 5px; 
+    margin-bottom: 30px; 
 }
 
 .content-wrapper {
     display: flex;
-    justify-content: space-between; /* Space between text and image */
-    align-items: center; /* Aligns image and text vertically */
+    justify-content: space-between; 
+    align-items: center; 
     margin-top: 20px;
 }
 
 .text-content {
-    flex: 1; /* The text takes up remaining space */
-    margin-right: 20px; /* Adds some space between the text and the image */
+    flex: 1; 
+    margin-right: 20px; 
 }
 
 .image-content img {
-    max-width: 400px; /* Set a max width for the image */
-    height: auto; /* Ensure the image scales proportionally */
+    max-width: 400px; 
+    height: auto; 
 }
  
- 
- 
- body{
-    
+ body {
     background-image: url(background-picture.avif);
     background-repeat: no-repeat;
     background-position: center;
     background-attachment: fixed;
     background-size:cover;
     margin: 0px;
-    font-family: Arial, sans-serif; /* ensures a clean front*/
-
+    font-family: Arial, sans-serif;
     }
-
-    h1{
+    h1 {
     text-align: center;
     text-shadow: 0px 0px 5px yellow, 0px -5px 5px red;
 }
 
-  h3{
+  h3 {
    text-align: center; 
    margin: 20px 0; /* add margin for spacing */
   }
@@ -224,7 +217,8 @@ main{
 .container{
     background-color:gray
 }
- #box1{
+
+ #create-event-container, #event-container, #participant-management-container, #over-under-payments-container {
     background-color: lightgray;
     border:2px solid rgba(161, 189, 127, 0.7);
     border-radius: 10px;
