@@ -1,11 +1,10 @@
 function createEvent(): void {
-    const submitButton: HTMLButtonElement = document.querySelector("#submitButton")!;
-    const eventName: HTMLInputElement = document.getElementById("eventName") as HTMLInputElement;
-    const amountOfPersons: HTMLInputElement = document.getElementById("amountOfPersons") as HTMLInputElement;
-    const participantsContainer: HTMLElement = document.getElementById("participantsContainer")!;
-    const generateFieldsButton: HTMLButtonElement = document.querySelector("#generateFieldsButton")!; // **Add this line**
+    const submitButton: HTMLButtonElement = document.querySelector("#submit-button")!;
+    const eventNameParagraph: HTMLInputElement = document.getElementById("event-name") as HTMLInputElement;
+    const amountOfPersonsParagraph: HTMLInputElement = document.getElementById("amount-of-persons") as HTMLInputElement;
+    const participantsContainer: HTMLElement = document.getElementById("participants-container")!;
+    const generateFieldsButton: HTMLButtonElement = document.querySelector("#generate-fields-button")!; 
 
-    // Function to validate and highlight empty fields
     const validateField: (field: HTMLInputElement) => boolean = field => {
         if (!field.value.trim()) {
             field.style.border = "2px solid red"; // Highlight empty field
@@ -17,10 +16,9 @@ function createEvent(): void {
         }
     };
 
-    // Generate participant fields based on number of participants
     generateFieldsButton.addEventListener("click", () => {
         participantsContainer.innerHTML = ""; // clear previous inputs
-        const numParticipants: number = parseInt(amountOfPersons.value);
+        const numParticipants: number = parseInt(amountOfPersonsParagraph.value);
 
         // Ensure at least 2 participants
         if (numParticipants && numParticipants >= 2) {
@@ -28,7 +26,7 @@ function createEvent(): void {
                 const input: HTMLInputElement = document.createElement("input");
                 input.type = "text";
                 input.placeholder = `Participant ${i} Name`;
-                input.id = `participantName${i}`;
+                input.id = `participant-name-${i}`;
                 participantsContainer.appendChild(input);
                 participantsContainer.appendChild(document.createElement("br"));
             }
@@ -38,13 +36,12 @@ function createEvent(): void {
         }
     });
 
-    // **Combined event listener for saving and submitting**
     submitButton.addEventListener("click", () => {
-        const numParticipants: number = parseInt(amountOfPersons.value);
+        const numParticipants: number = parseInt(amountOfPersonsParagraph.value);
 
         // Check if all required fields are filled and number of participants is valid
-        const isEventNameValid: boolean = validateField(eventName);
-        const isAmountOfPersonsValid: boolean = validateField(amountOfPersons);
+        const isEventNameValid: boolean = validateField(eventNameParagraph);
+        const isAmountOfPersonsValid: boolean = validateField(amountOfPersonsParagraph);
 
         // Validate all participant names
         let areParticipantsValid: boolean = true;
@@ -52,7 +49,7 @@ function createEvent(): void {
         let duplicateFound: boolean = false;
 
         for (let i: number = 1; i <= numParticipants; i++) {
-            const participantField: HTMLInputElement = document.getElementById(`participantName${i}`) as HTMLInputElement;
+            const participantField: HTMLInputElement = document.getElementById(`participant-name-${i}`) as HTMLInputElement;
             const participantName: string = participantField.value.trim();
             const isParticipantValid: boolean = validateField(participantField);
 
@@ -73,7 +70,7 @@ function createEvent(): void {
         // If all fields are valid and no duplicates, proceed to store and redirect
         if (isEventNameValid && isAmountOfPersonsValid && areParticipantsValid && !duplicateFound) {
             // Store event details in localStorage
-            const newEvent: any = {eventName: eventName.value, amountOfPersons: amountOfPersons.value, participants: Array.from(participants), participantCosts: [] };
+            const newEvent: any = {eventName: eventNameParagraph.value, amountOfPersons: amountOfPersonsParagraph.value, participants: Array.from(participants), participantCosts: [] };
             events.push(newEvent);
             localStorage.setItem("events", JSON.stringify(events));
 

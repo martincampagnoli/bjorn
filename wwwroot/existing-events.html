@@ -1,137 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Existing event</title> 
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-    <h1>Results</h1>
-
-    <nav class="navbar">
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="create-events.html">New event</a></li>
-            <li><a href="existing-events.html">Existing event </a></li>
-            <li><a href="all-events.html">All your events</a></li>
-        </ul>
-    </nav>
-
-
-    <main>
-        <div id="box1">
-            <br>
-            <br>
-            <h4>Event Details</h4>
-            <br>
-            <br>
-            <fieldset>
-        
-                <p id="eventName">Event name: <strong>Your Event Name Here</strong></p>
-                <p id="amountOfPersons">Amount of people: <strong>Number of People</strong></p>
-                <p id="amountPerPerson">Amount per person: <strong>$Amount Per Person</strong></p>
-            </fieldset>
-        </div>
-        
- <div id="box1">
-        <h4>Add cost to participant:</h4>
-        
-        <div class="form-container">
-    <fieldset>
-
-        <div class="cost-management">
-        <label for="costParticipantName">select Name:</label>
-            <!-- Dropdown for selecting participants -->
-            <select id="costParticipantSelect">
-            <!-- Options will be dynamically populated -->
-            </select>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Existing event</title> 
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <h1>Results</h1>
+        <nav class="navbar">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="create-events.html">New event</a></li>
+                <li><a href="existing-events.html">Existing event </a></li>
+                <li><a href="all-events.html">All your events</a></li>
+            </ul>
+        </nav>
+        <main>
+            <div id="event-container">
+                <br>
+                <br>
+                <h4>Event Details</h4>
+                <br>
+                <br>
+                <fieldset>
+                    <p id="event-name">Event name: <strong>Your event name here</strong></p>
+                    <p id="amount-of-persons">Amount of people: <strong>Number of people</strong></p>
+                    <p id="amount-per-person">Amount per person: <strong>$Amount per person</strong></p>
+                </fieldset>
             </div>
-    
-        <div class="cost-management">
-            <label for="costAmount">Cost:</label>
-            <input type="number" id="costAmount" placeholder="fill in amount" />
-        </div>
-
-        <div class="cost-management">
-            <label for="tipPercentage">Tip % (optional):</label>
-            <input type="number" id="tipPercentage" placeholder="Enter tip percentage">
-        </div>
-    
-        <div class="cost-management">
-            <label for="costDate">Date:</label>
-            <input type="date" id="costDate" required />
-        </div>
-
-        <div class="cost-management">
-            <label for="costDescription">Describe cost:</label>
-            <input type="text" id="costDescription" placeholder="reason for cost" required />
-        </div>
-
-        <div class="cost-management-buttons">
-            <button id="addCostButton">Add cost</button>
-        </div>
-        <br><br>
-       
-        <div id="participantsContainer"></div> <!-- This will hold the participant names and their costs -->
-
-        <div id="overUnderPaymentsSection"></div>
-            
-        </div>
-    </div>
-    </fieldset>
-</div>
-
-        <div id="box1">
-            <h4>Manage participants</h4>
-            <!-- Other event details here -->
-        
-        <!-- Add a fieldset to mimic the "nieuw-uitje" style -->
-    <fieldset>
-        
-
-        <div class="participant-management">
-            <label for="newParticipantName">New participant: </label>
-            <input type="text" id="newParticipantName" placeholder="fill in name" />
-            
-        </div>
-        
-        <div class="participant-management">
-        <button id="addParticipantButton">Add</button>
-        </div>
-
-        <div class="participant-management">
-           <label for="removeParticipantName">Delete participant:</label>
-           <input type="text" id="removeParticipantName" placeholder="fill in name" />
-           
-        </div>
-        
-            <div class="participant-management">
-            <button id="removeParticipantButton">Delete</button>
-    
-        </div>
-    </fieldset> 
-</div>
-
-   
-    
-    <div id="box1">
-            <h4>over- or underpayed</h4>
-            <br>
-            
-            <div id="overUnderPayments"></div>
-            <button id="calculateButton">Calculate Over/Under Payments</button>
-
-            <button id="shareButton">Share on WhatsApp</button>
-   </div>
-
-    <script src="../src/showExistingEvent.ts" type="module"></script>
-</main>
-
-</body>
-
+            <div id="box1">
+                <h4>Add cost to participant:</h4>    
+                <div class="form-container">
+                    <fieldset>
+                        <div class="cost-management">
+                            <label for="cost-participant-select">Select name:</label>
+                            <select id="cost-participant-select"></select>
+                        </div>
+                        <div class="cost-management">
+                            <label for="cost-amount">Cost:</label>
+                            <input type="number" id="cost-amount" placeholder="Fill in amount" />
+                        </div>
+                        <div class="cost-management">
+                            <label for="tip-percentage">Tip % (optional):</label>
+                            <input type="number" id="tip-percentage" placeholder="Enter tip percentage">
+                        </div>
+                        <div class="cost-management">
+                            <label for="cost-date">Date:</label>
+                            <input type="date" id="cost-date" required />
+                        </div>
+                        <div class="cost-management">
+                            <label for="cost-description">Describe cost:</label>
+                            <input type="text" id="cost-description" placeholder="Reason for cost" required />
+                        </div>
+                        <div class="cost-management-buttons">
+                            <button id="add-cost-button">Add cost</button>
+                        </div>
+                        <br><br>
+                         <!-- This will hold the participant names and their costs -->
+                        <div id="participants-container"></div>
+                        <div id="over-under-payments-section"></div>
+                    </fieldset>
+                </div>
+            </div>
+            <div id="participant-management-container">
+                <h4>Manage participants</h4>
+                <fieldset>
+                    <div class="participant-management">
+                        <label for="new-participant-name">New participant: </label>
+                        <input type="text" id="new-participant-name" placeholder="fill in name" />
+                    </div>
+                    <div class="participant-management">
+                        <button id="add-participant-button">Add</button>
+                    </div>
+                    <div class="participant-management">
+                        <label for="remove-participant-name">Delete participant:</label>
+                        <input type="text" id="remove-participant-name" placeholder="fill in name" />
+                    </div>
+                    <div class="participant-management">
+                    <button id="remove-participant-button">Delete</button>
+                </fieldset> 
+            </div>
+            <div id="over-under-payments-container">
+                <h4>Over or Underpaid</h4>
+                <br>
+                <div id="over-under-payments"></div>
+                <button id="calculate-button">Calculate Over/Under Payments</button>
+                <button id="share-button">Share on WhatsApp</button>
+            </div>
+        <script src="../src/showExistingEvent.ts" type="module"></script>
+        </main>
+    </body>
 </html>
 
 

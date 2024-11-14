@@ -13,39 +13,42 @@ type ParticipantCosts = {
 function showExistingEvent(): void {
 
     function init(): void {
-        const eventName: HTMLElement = document.getElementById("eventName")!;
-        const amountOfPersonsContainer: HTMLElement = document.getElementById("amountOfPersons")!;
-        const amountPerPersonElement: HTMLElement = document.getElementById("amountPerPerson")!;
-        const participantsContainer: HTMLElement = document.getElementById("participantsContainer")!;
-        const addParticipantButton: HTMLButtonElement = document.getElementById("addParticipantButton") as HTMLButtonElement;
-        const newParticipantInput: HTMLInputElement = document.getElementById("newParticipantName") as HTMLInputElement;
-        const removeParticipantButton: HTMLButtonElement = document.getElementById("removeParticipantButton") as HTMLButtonElement;
-        const removeParticipantInput: HTMLInputElement = document.getElementById("removeParticipantName") as HTMLInputElement;
-        const costParticipantSelect: HTMLSelectElement = document.getElementById("costParticipantSelect") as HTMLSelectElement;
-        const costAmountInput: HTMLInputElement = document.getElementById("costAmount") as HTMLInputElement;
-        const addCostButton: HTMLButtonElement = document.getElementById("addCostButton") as HTMLButtonElement;
-        const eventContainer: HTMLButtonElement = document.getElementById("box1") as HTMLButtonElement;
-        const costDateInput: HTMLInputElement = document.getElementById("costDate") as HTMLInputElement;
-        const costDescriptionInput: HTMLInputElement = document.getElementById("costDescription") as HTMLInputElement;
-        const calculateButton: HTMLElement | null = document.getElementById("calculateButton");
-        const shareButton: HTMLButtonElement = document.getElementById("shareButton") as HTMLButtonElement;
+        const eventNameParagraph: HTMLElement = document.getElementById("event-name")!;
+        const amountOfPersonsParagraph: HTMLElement = document.getElementById("amount-of-persons")!;
+        const amountPerPersonParagraph: HTMLElement = document.getElementById("amount-per-person")!;
+        
+        const participantsContainer: HTMLElement = document.getElementById("participants-container")!;
+        const eventContainer: HTMLButtonElement = document.getElementById("event-container") as HTMLButtonElement;
+
+
+        const addParticipantButton: HTMLButtonElement = document.getElementById("add-participant-button") as HTMLButtonElement;
+        const removeParticipantButton: HTMLButtonElement = document.getElementById("remove-participant-button") as HTMLButtonElement;
+        const shareButton: HTMLButtonElement = document.getElementById("share-button") as HTMLButtonElement;
+        const addCostButton: HTMLButtonElement = document.getElementById("add-cost-button") as HTMLButtonElement;
+        const calculateButton: HTMLElement | null = document.getElementById("calculate-button");
+
+        const removeParticipantInput: HTMLInputElement = document.getElementById("remove-participant-name") as HTMLInputElement;
+        const newParticipantInput: HTMLInputElement = document.getElementById("new-participant-name") as HTMLInputElement;
+        const costAmountInput: HTMLInputElement = document.getElementById("cost-amount") as HTMLInputElement;
+        const costDateInput: HTMLInputElement = document.getElementById("cost-date") as HTMLInputElement;
+        const costDescriptionInput: HTMLInputElement = document.getElementById("cost-description") as HTMLInputElement;
+
+        const costParticipantSelect: HTMLSelectElement = document.getElementById("cost-participant-select") as HTMLSelectElement;
 
         let events: string[] | any[] = [];
+        let lastTransactions: string[] = [];
 
         if (localStorage.getItem("events")){
             events = JSON.parse(localStorage.getItem("events")!) || [];
         } 
-        const currentEvent = events?  events[events.length-1] : null;
-        console.log("CURRENT EVENT");
-        console.log(currentEvent);
 
+        const currentEvent = events?  events[events.length-1] : null;
         const grandTotal: number = parseFloat(currentEvent.grandTotal);
         const amountPerPerson: number = grandTotal || 0 / parseInt(currentEvent.amountOfPersons);
-        debugger;
 
-        eventName.innerHTML = `Event Name: ${currentEvent.eventName}`;
-        amountOfPersonsContainer.innerHTML = `Amount of people: ${currentEvent.amountOfPersons}`;
-        amountPerPersonElement.innerHTML = `Amount per Person (with tip): ${amountPerPerson.toFixed(2)}`;
+        eventNameParagraph.innerHTML = `Event Name: ${currentEvent.eventName}`;
+        amountOfPersonsParagraph.innerHTML = `Amount of people: ${currentEvent.amountOfPersons}`;
+        amountPerPersonParagraph.innerHTML = `Amount per Person (with tip): ${amountPerPerson.toFixed(2)}`;
 
         participantsContainer.addEventListener("click", (event: Event) => {
             const target: HTMLElement = event.target as HTMLElement;
@@ -106,7 +109,7 @@ function showExistingEvent(): void {
 
                 // Update number of participants and save in localStorage
                 const newAmountOfPersons: number = currentEvent.participants.length;
-                amountOfPersonsContainer.innerHTML = `Amount of people: ${newAmountOfPersons}`;
+                amountOfPersonsParagraph.innerHTML = `Amount of people: ${newAmountOfPersons}`;
                 updateLocalStorage("amountOfPersons", newAmountOfPersons);
 
                 // Clear the input field after adding
@@ -122,7 +125,7 @@ function showExistingEvent(): void {
             const costAmountValue: number = parseFloat(costAmountInput.value.trim());
             const costDate: string = costDateInput.value.trim();
             const costDescription: string = costDescriptionInput.value.trim();
-            const tipPercentageValue: number = parseFloat((document.getElementById("tipPercentage") as HTMLInputElement).value.trim());
+            const tipPercentageValue: number = parseFloat((document.getElementById("tip-percentage") as HTMLInputElement).value.trim());
 
             let totalAmount: number = costAmountValue;
 
@@ -152,13 +155,12 @@ function showExistingEvent(): void {
                 costDateInput.value = "";
                 costDescriptionInput.value = "";
 
-                (document.getElementById("tipPercentage") as HTMLInputElement).value = "";
+                (document.getElementById("tip-percentage") as HTMLInputElement).value = "";
             } else {
                 alert("Please enter a valid participant name and a non-negative cost.");
             }
         });
 
-        let lastTransactions: string[] = [];
 
         calculateButton?.addEventListener("click", () => {
             const amountPerPerson: number = calculateAmountPerPerson(currentEvent); // Get the amount per person
@@ -171,21 +173,19 @@ function showExistingEvent(): void {
             shareToWhatsApp(currentEvent.articipantCosts, amountPerPerson, lastTransactions); // Share with transactions included
         });
 
-        window.addEventListener("storage", (event) => {
-            console.dir(event);
+        window.addEventListener("storage", () => {
             displayParticipants(participantsContainer, eventContainer, currentEvent);
-            displayAmountPerPerson(currentEvent, amountOfPersonsContainer, amountPerPersonElement);
+            displayAmountPerPerson(currentEvent, amountOfPersonsParagraph, amountPerPersonParagraph);
             populateParticipantDropdown(costParticipantSelect, currentEvent);
         });
 
         populateParticipantDropdown(costParticipantSelect, currentEvent);
-
         displayParticipants(participantsContainer, eventContainer, currentEvent);
     }
-    function displayAmountPerPerson(currentEvent: any, amountOfPersonsContainer: any, amountPerPersonElement: any): void {
+    function displayAmountPerPerson(currentEvent: any, amountOfPersonsParagraph: any, amountPerPersonParagraph: any): void {
         const amountPerPerson: number = currentEvent.grandTotal / parseInt(currentEvent.amountOfPersons);
-        amountOfPersonsContainer.innerHTML = `Amount of people: ${currentEvent.amountOfPersons}`;
-        amountPerPersonElement.innerHTML = `Amount per Person (with tip): ${amountPerPerson.toFixed(2)}`;
+        amountOfPersonsParagraph.innerHTML = `Amount of people: ${currentEvent.amountOfPersons}`;
+        amountPerPersonParagraph.innerHTML = `Amount per Person (with tip): ${amountPerPerson.toFixed(2)}`;
     }
     function displayParticipants(participantsContainer: any, eventContainer: any,  currentEvent: any): void {
         participantsContainer.innerHTML = ""; // Clear previous list
@@ -317,8 +317,6 @@ function showExistingEvent(): void {
                 // Remove the specific cost entry using splice
                 currentEvent.participantCosts[participant].splice(index, 1);
 
-                console.log("Costs after deletion: ", currentEvent.participantCosts[participant]); // Debugging log
-
                 // If the participant has no more costs, create a new object without that participant
                 if (currentEvent.participantCosts[participant].length === 0) {
                     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -360,21 +358,14 @@ function showExistingEvent(): void {
         }, 3000);
     }
     function populateParticipantDropdown(costParticipantSelect: any, currentEvent: any): void {
-        // Clear previous options
-        costParticipantSelect.innerHTML = "";
-
-        // Log the dropdown element and the participants array
-        console.log("Dropdown element:", costParticipantSelect); // Log the dropdown element
-        console.log("Participants for dropdown:", currentEvent.participants); // Log the participants array
-
-        // Add default "Select participant" option
         const defaultOption: HTMLOptionElement = document.createElement("option");
+
+        costParticipantSelect.innerHTML = "";
         defaultOption.text = "Select participant";
         defaultOption.disabled = true;
         defaultOption.selected = true;
         costParticipantSelect.add(defaultOption);
 
-        // Populate with participant names
         currentEvent.participants.forEach((participant: string) => {
             const option: HTMLOptionElement = document.createElement("option");
             option.value = participant;
@@ -395,17 +386,15 @@ function showExistingEvent(): void {
 
     function calculateGrandTotal(participantCosts: ParticipantCosts): number {
         let grandTotal: number = 0;
-
         for (const participant in participantCosts) {
             const costs: CostDetails[] = participantCosts[participant] || [];
             grandTotal += costs.reduce((sum, cost) => sum + cost.amount, 0);
         }
-
         return grandTotal;
     }
 
     function displayOverUnderPayments(amountPerPerson: number, currentEvent: any): string[] { // Change return type to string[]
-        const overUnderPaymentsContainer: HTMLElement | null = document.getElementById("overUnderPayments");
+        const overUnderPaymentsContainer: HTMLElement | null = document.getElementById("over-under-payments");
         if (!overUnderPaymentsContainer) return [];
 
         overUnderPaymentsContainer.innerHTML = ""; // Clear previous results
