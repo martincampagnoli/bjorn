@@ -70,7 +70,7 @@ function createEvent(): void {
         // If all fields are valid and no duplicates, proceed to store and redirect
         if (isEventNameValid && isAmountOfPersonsValid && areParticipantsValid && !duplicateFound) {
             // Store event details in localStorage
-            const newEvent: any = {eventName: eventNameParagraph.value, amountOfPersons: amountOfPersonsParagraph.value, participants: Array.from(participants), participantCosts: [] };
+            const newEvent: any = {eventName: eventNameParagraph.value, participants: Array.from(participants), participantCosts: [] };
             events.push(newEvent);
             localStorage.setItem("events", JSON.stringify(events));
 

@@ -43,12 +43,8 @@ function showExistingEvent(): void {
         } 
 
         const currentEvent = events?  events[events.length-1] : null;
-        const grandTotal: number = parseFloat(currentEvent.grandTotal);
-        const amountPerPerson: number = grandTotal || 0 / parseInt(currentEvent.amountOfPersons);
-
-        eventNameParagraph.innerHTML = `Event Name: ${currentEvent.eventName}`;
-        amountOfPersonsParagraph.innerHTML = `Amount of people: ${currentEvent.amountOfPersons}`;
-        amountPerPersonParagraph.innerHTML = `Amount per Person (with tip): ${amountPerPerson.toFixed(2)}`;
+        
+        displaySummary(eventNameParagraph, amountOfPersonsParagraph, amountPerPersonParagraph, currentEvent);
 
         participantsContainer.addEventListener("click", (event: Event) => {
             const target: HTMLElement = event.target as HTMLElement;
@@ -89,7 +85,7 @@ function showExistingEvent(): void {
                     currentEvent.participantCosts = updatedParticipantCosts; 
                     const newAmountOfPersons: number = currentEvent.participants.length;
                     
-                    amountOfPersonsContainer.innerHTML = `Amount of people: ${newAmountOfPersons}`;
+                    amountOfPersonsParagraph.innerHTML = `Amount of people: ${newAmountOfPersons}`;
 
                     const amountPerPerson: number = calculateAmountPerPerson(currentEvent); 
                     displayOverUnderPayments(amountPerPerson, currentEvent); 
@@ -102,16 +98,14 @@ function showExistingEvent(): void {
 
         addParticipantButton.addEventListener("click", () => {
             const newParticipantName: string = newParticipantInput.value.trim();
+            let newAmountOfPersons: number;
 
             if (newParticipantName && !currentEvent.participants.includes(newParticipantName)) {
                 currentEvent.participants.push(newParticipantName);
-                updateLocalStorage("participants", currentEvent.participants);
-
-                // Update number of participants and save in localStorage
-                const newAmountOfPersons: number = currentEvent.participants.length;
+                newAmountOfPersons = currentEvent.participants.length;
                 amountOfPersonsParagraph.innerHTML = `Amount of people: ${newAmountOfPersons}`;
-                updateLocalStorage("amountOfPersons", newAmountOfPersons);
-
+                events[events.length - 1] = currentEvent;
+                updateLocalStorage("events", events);
                 // Clear the input field after adding
                 newParticipantInput.value = "";
             }
@@ -161,7 +155,6 @@ function showExistingEvent(): void {
             }
         });
 
-
         calculateButton?.addEventListener("click", () => {
             const amountPerPerson: number = calculateAmountPerPerson(currentEvent); // Get the amount per person
             console.log(amountPerPerson);
@@ -174,17 +167,27 @@ function showExistingEvent(): void {
         });
 
         window.addEventListener("storage", () => {
+            displaySummary(eventNameParagraph, amountOfPersonsParagraph, amountPerPersonParagraph, currentEvent);
             displayParticipants(participantsContainer, eventContainer, currentEvent);
             displayAmountPerPerson(currentEvent, amountOfPersonsParagraph, amountPerPersonParagraph);
             populateParticipantDropdown(costParticipantSelect, currentEvent);
+            displayOverUnderPayments(calculateAmountPerPerson(currentEvent), currentEvent);
         });
 
         populateParticipantDropdown(costParticipantSelect, currentEvent);
         displayParticipants(participantsContainer, eventContainer, currentEvent);
     }
+    function displaySummary(eventNameParagraph: any, amountOfPersonsParagraph: any, amountPerPersonParagraph: any, currentEvent: any): void {
+        const grandTotal = calculateGrandTotal(currentEvent.participantCosts);
+        const amountPerPerson = (grandTotal || 0 ) / currentEvent.participants.length;
+        eventNameParagraph.innerHTML = `Event Name: ${currentEvent.eventName}`;
+        amountOfPersonsParagraph.innerHTML = `Amount of people: ${currentEvent.participants.length}`;
+        amountPerPersonParagraph.innerHTML = `Amount per Person (with tip): ${amountPerPerson.toFixed(2)}`;
+
+    }
     function displayAmountPerPerson(currentEvent: any, amountOfPersonsParagraph: any, amountPerPersonParagraph: any): void {
-        const amountPerPerson: number = currentEvent.grandTotal / parseInt(currentEvent.amountOfPersons);
-        amountOfPersonsParagraph.innerHTML = `Amount of people: ${currentEvent.amountOfPersons}`;
+        const amountPerPerson: number = currentEvent.grandTotal / parseInt(currentEvent.participants.length);
+        amountOfPersonsParagraph.innerHTML = `Amount of people: ${currentEvent.participants.length}`;
         amountPerPersonParagraph.innerHTML = `Amount per Person (with tip): ${amountPerPerson.toFixed(2)}`;
     }
     function displayParticipants(participantsContainer: any, eventContainer: any,  currentEvent: any): void {
@@ -327,10 +330,6 @@ function showExistingEvent(): void {
                 // Update localStorage with the modified costs
                 updateLocalStorage("participantCosts", currentEvent.participantCosts);
 
-                // Refresh the over-/under-payment display
-                const amountPerPerson: number = calculateAmountPerPerson(currentEvent); // Recalculate amount per person
-                displayOverUnderPayments(amountPerPerson, currentEvent); // Update over-/under-paid amounts
-
                 // Notify the user that the cost has been deleted
                 showNotification(`${participant}'s cost at index ${index} has been successfully deleted.`);
             }
@@ -384,12 +383,11 @@ function showExistingEvent(): void {
         return calculateGrandTotal(currentEvent.participantCosts) / parseInt(currentEvent.amountOfPersons);;
     }
 
-    function calculateGrandTotal(participantCosts: ParticipantCosts): number {
+    function calculateGrandTotal(participantCosts: any): number {
         let grandTotal: number = 0;
-        for (const participant in participantCosts) {
-            const costs: CostDetails[] = participantCosts[participant] || [];
-            grandTotal += costs.reduce((sum, cost) => sum + cost.amount, 0);
-        }
+        participantCosts.forEach((cost: any) => { 
+            grandTotal += cost.amount;
+        }); 
         return grandTotal;
     }
 
