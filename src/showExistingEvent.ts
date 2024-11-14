@@ -102,12 +102,12 @@ function showExistingEvent(): void {
 
             if (newParticipantName && !currentEvent.participants.includes(newParticipantName)) {
                 currentEvent.participants.push(newParticipantName);
-                localStorage.setItem("participants", JSON.stringify(currentEvent.participants));
+                updateLocalStorage("participants", currentEvent.participants);
 
                 // Update number of participants and save in localStorage
                 const newAmountOfPersons: number = currentEvent.participants.length;
                 amountOfPersonsContainer.innerHTML = `Amount of people: ${newAmountOfPersons}`;
-                localStorage.setItem("amountOfPersons", newAmountOfPersons.toString());
+                updateLocalStorage("amountOfPersons", newAmountOfPersons);
 
                 // Clear the input field after adding
                 newParticipantInput.value = "";
@@ -145,8 +145,7 @@ function showExistingEvent(): void {
 
                 events[events.length - 1] = currentEvent;
 
-                localStorage.setItem("events", JSON.stringify(events));
-                window.dispatchEvent(new Event("storage"));
+                updateLocalStorage("events", events);
 
                 costParticipantSelect.selectedIndex = 0; // Reset the dropdown selection to the default option
                 costAmountInput.value = "";
@@ -287,8 +286,7 @@ function showExistingEvent(): void {
                             tip: newTip,
                         };
 
-                        // Update localStorage
-                        localStorage.setItem("participantCosts", JSON.stringify(currentEvent.participantCosts));
+                        updateLocalStorage("participantCosts", currentEvent.participantCosts);
                     }
                     else {
                         alert("Please enter valid values.");
@@ -329,7 +327,7 @@ function showExistingEvent(): void {
                 }
 
                 // Update localStorage with the modified costs
-                localStorage.setItem("participantCosts", JSON.stringify(currentEvent.participantCosts));
+                updateLocalStorage("participantCosts", currentEvent.participantCosts);
 
                 // Refresh the over-/under-payment display
                 const amountPerPerson: number = calculateAmountPerPerson(currentEvent); // Recalculate amount per person
@@ -508,6 +506,11 @@ function showExistingEvent(): void {
 
         // Open WhatsApp
         window.open(whatsappUrl, "_blank");
+    }
+
+    function updateLocalStorage(key: string, value: any): void {
+        localStorage.setItem(key, JSON.stringify(value));
+        window.dispatchEvent(new Event("storage"));
     }
 
     init();
