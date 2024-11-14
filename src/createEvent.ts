@@ -19,7 +19,6 @@ function createEvent(): void {
 
     // Generate participant fields based on number of participants
     generateFieldsButton.addEventListener("click", () => {
-        localStorage.clear();
         participantsContainer.innerHTML = ""; // clear previous inputs
         const numParticipants: number = parseInt(amountOfPersons.value);
 
@@ -70,13 +69,13 @@ function createEvent(): void {
                 participants.add(participantName);
             }
         }
-
+        const events: any = localStorage.getItem("events") ? JSON.parse(localStorage.getItem("events")!) : []
         // If all fields are valid and no duplicates, proceed to store and redirect
         if (isEventNameValid && isAmountOfPersonsValid && areParticipantsValid && !duplicateFound) {
             // Store event details in localStorage
-            localStorage.setItem("eventName", eventName.value);
-            localStorage.setItem("amountOfPersons", amountOfPersons.value);
-            localStorage.setItem("participants", JSON.stringify(Array.from(participants)));
+            const newEvent: any = {eventName: eventName.value, amountOfPersons: amountOfPersons.value, participants: Array.from(participants), participantCosts: [] };
+            events.push(newEvent);
+            localStorage.setItem("events", JSON.stringify(events));
 
             // **Show confirmation message**
             alert("participants succesfully saved");
