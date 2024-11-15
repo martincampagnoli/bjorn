@@ -156,7 +156,6 @@ function showExistingEvent(): void {
 
         displaySummary(eventNameParagraph, amountOfPersonsParagraph, amountPerPersonParagraph, currentEvent);
         displayParticipants(participantsContainer, eventContainer, currentEvent);
-        displayAmountPerPerson(currentEvent, amountOfPersonsParagraph, amountPerPersonParagraph);
         populateParticipantDropdown(currentEvent);
         displayOverUnderPayments(calculateAmountPerPerson(currentEvent), currentEvent);
     }
@@ -167,11 +166,6 @@ function showExistingEvent(): void {
         amountOfPersonsParagraph.innerHTML = `Amount of people: ${currentEvent.participants.length}`;
         amountPerPersonParagraph.innerHTML = `Amount per Person (with tip): ${amountPerPerson.toFixed(2)}`;
 
-    }
-    function displayAmountPerPerson(currentEvent: any, amountOfPersonsParagraph: any, amountPerPersonParagraph: any): void {
-        const amountPerPerson: number = currentEvent.grandTotal / parseInt(currentEvent.participants.length);
-        amountOfPersonsParagraph.innerHTML = `Amount of people: ${currentEvent.participants.length}`;
-        amountPerPersonParagraph.innerHTML = `Amount per Person (with tip): ${amountPerPerson.toFixed(2)}`;
     }
     function displayParticipants(participantsContainer: any, eventContainer: any,  currentEvent: any): void {
         participantsContainer.innerHTML = ""; // Clear previous list
