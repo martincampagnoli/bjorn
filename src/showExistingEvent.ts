@@ -46,10 +46,11 @@ function showExistingEvent(): void {
     
             if (target.matches("button[id^='delete-btn-']")) {
                 const deleteButton: HTMLButtonElement = target as HTMLButtonElement; 
-                deleteButton.setAttribute("disabled", "true"); 
                 const idParts: string[] = target.id.split("-");
                 const index: string = idParts[2];
                 const participant: string = idParts.slice(3).join("-");
+                deleteButton.setAttribute("disabled", "true"); 
+
                 try {
                     deleteCost(participant, parseInt(index), deleteButton, currentEvent);
                 }
@@ -90,10 +91,9 @@ function showExistingEvent(): void {
             if (newParticipantName && !currentEvent.participants.includes(newParticipantName)) {
                 currentEvent.participants.push(newParticipantName);
                 newAmountOfPersons = currentEvent.participants.length;
-                amountOfPersonsParagraph.innerHTML = `Amount of people: ${newAmountOfPersons}`;
                 updateStoredEvents(currentEvent);
-                // Clear the input field after adding
                 newParticipantInput.value = "";
+                amountOfPersonsParagraph.innerHTML = `Amount of people: ${newAmountOfPersons}`;
             }
             else {
                 alert("Please enter a valid and unique participant name.");
@@ -101,18 +101,18 @@ function showExistingEvent(): void {
         });
 
         addCostButton.addEventListener("click", () => {
-            const costParticipantName: string = costParticipantSelect.value;
-            const costAmountValue: number = parseFloat(costAmountInput.value.trim());
-            const costDate: string = costDateInput.value.trim();
-            const costDescription: string = costDescriptionInput.value.trim();
-            const tipPercentageValue: number = parseFloat((document.getElementById("tip-percentage") as HTMLInputElement).value.trim());
+            const costParticipantName = costParticipantSelect.value;
+            const costAmountValue = parseFloat(costAmountInput.value.trim());
+            const costDate = costDateInput.value.trim();
+            const costDescription = costDescriptionInput.value.trim();
+            const tipPercentageValue = parseFloat((document.getElementById("tip-percentage") as HTMLInputElement).value.trim());
 
-            let totalAmount: number = costAmountValue;
+            let totalAmount = costAmountValue;
 
-            let tipAmount: number = 0; // Initialize tipAmount
+            let tipAmount = 0; 
             if (!isNaN(tipPercentageValue) && tipPercentageValue > 0) {
-                tipAmount = (costAmountValue * tipPercentageValue) / 100; // Calculate the tip amount
-                totalAmount += tipAmount; // Add tip to total amount
+                tipAmount = (costAmountValue * tipPercentageValue) / 100; 
+                totalAmount += tipAmount; 
             }
 
             if (costParticipantName && currentEvent.participants.includes(costParticipantName) && !isNaN(costAmountValue) && costAmountValue >= 0 && costDate && costDescription) {
@@ -120,14 +120,14 @@ function showExistingEvent(): void {
                     participantName: costParticipantName,
                     date: costDate,
                     description: costDescription,
-                    amount: totalAmount, // Store the total amount (with tip included)
-                    tip: tipAmount, // Store the tip amount separately
+                    amount: totalAmount, 
+                    tip: tipAmount, 
                 };
                 currentEvent.costs = currentEvent.costs || [];
                 currentEvent.costs.push(newCostDetail);
 
                 updateStoredEvents(currentEvent);
-                costParticipantSelect.selectedIndex = 0; // Reset the dropdown selection to the default option
+                costParticipantSelect.selectedIndex = 0; 
                 costAmountInput.value = "";
                 costDateInput.value = "";
                 costDescriptionInput.value = "";
@@ -136,11 +136,11 @@ function showExistingEvent(): void {
             } else {
                 alert("Please enter a valid participant name and a non-negative cost.");
             }
-        });
+        })
 
         shareButton.addEventListener("click", () => {
-            const amountPerPerson: number = calculateAmountPerPerson(currentEvent); // Get the amount per person again for sharing
-            shareToWhatsApp(currentEvent, amountPerPerson, lastTransactions); // Share with transactions included
+            const amountPerPerson: number = calculateAmountPerPerson(currentEvent); 
+            shareToWhatsApp(currentEvent, amountPerPerson, lastTransactions); 
         });
 
         window.addEventListener("storage", () => {
@@ -168,8 +168,8 @@ function showExistingEvent(): void {
 
     }
     function displayParticipants(participantsContainer: any, eventContainer: any,  currentEvent: any): void {
-        participantsContainer.innerHTML = ""; // Clear previous list
-        let grandTotal: number = 0; // Initialize grand total
+        participantsContainer.innerHTML = ""; 
+        const grandTotal = calculateGrandTotal(currentEvent.costs);
 
         currentEvent.participants.forEach((participant: string | number) => {
             const p: HTMLElement = document.createElement("p");
@@ -177,63 +177,49 @@ function showExistingEvent(): void {
                 (costDetail: CostDetails) => costDetail.participantName === participant
             );
 
-            // Calculate total cost for the participant
             const totalCost: number = costs.reduce((sum, cost) => sum + cost.amount, 0);
-            grandTotal += totalCost; // Add to grand total
 
-            // Display participant with total costs first
             p.innerHTML += `<strong>${participant} - Total Costs: €${totalCost.toFixed(2)}</strong><br> Costs:<br>`;
 
-            // Check if there are any costs before displaying
             if (costs.length > 0) {
-                // Create cost display with edit and delete buttons
                 costs.forEach((cost, index) => {
                     const costItem: HTMLDivElement = document.createElement("div");
                     costItem.innerHTML = `€${cost.amount.toFixed(2)} on ${cost.date} for ${cost.description}`;
 
-                    // Create and append the edit button
                     const editButton: HTMLButtonElement = document.createElement("button");
                     editButton.innerText = "Edit";
-                    editButton.id = `edit-btn-${index}-${participant}`; // Use index to identify the button
+                    editButton.id = `edit-btn-${index}-${participant}`;
 
-                    // Create and append the delete button
                     const deleteButton: HTMLButtonElement = document.createElement("button");
                     deleteButton.innerText = "Delete";
-                    deleteButton.id = `delete-btn-${index}-${participant}`; // Use index to identify the button
+                    deleteButton.id = `delete-btn-${index}-${participant}`; 
 
-                    costItem.appendChild(editButton); // Append edit button to the cost item
-                    costItem.appendChild(deleteButton); // Append button to the cost item
-                    p.appendChild(costItem); // Append cost item to participant paragraph
+                    costItem.appendChild(editButton); 
+                    costItem.appendChild(deleteButton); 
+                    p.appendChild(costItem); 
                 });
             }
             else {
-                // Indicate that there are no costs
                 p.innerHTML += "No costs recorded.";
             }
-            participantsContainer.appendChild(p); // Add participant info to the container
+            participantsContainer.appendChild(p); 
         });
 
-        // Display grand total amount at the end of the participant list
         document.getElementById("grand-total")?.remove();
         const grandTotalElement: HTMLDivElement = document.createElement("div");
         grandTotalElement.id = "grand-total";
         grandTotalElement.innerHTML = `<strong>Grand Total for All Participants: €${grandTotal.toFixed(2)}</strong>`;
-        eventContainer.appendChild(grandTotalElement); // Append grand total to the container
+        eventContainer.appendChild(grandTotalElement); 
     }
     function editCost(participant: string, index: number, currentEvent: any, participantsContainer: HTMLElement): void {
-        // Get the current cost details
         const currentCost: CostDetails | undefined = currentEvent.costs[index];
 
         if (currentCost) {
-            // Attempt to find the delete button first
             const deleteButton: Element | null = participantsContainer.querySelector(`#delete-btn-${index}-${participant}`);
 
-            // Check if the delete button exists
             if (deleteButton) {
-                // Get the parent element safely
                 const costItem: HTMLDivElement = deleteButton.parentElement as HTMLDivElement;
 
-                // Clear the current content and replace with input fields
                 costItem.innerHTML = `
                     <input type="number" id="edit-cost-amount" value="${currentCost.amount}" />
                     <input type="date" id="edit-cost-date" value="${currentCost.date}" />
@@ -242,7 +228,6 @@ function showExistingEvent(): void {
                     <button id="cancel-edit-btn">Cancel</button>
                 `;
 
-                // Add event listeners for confirm and cancel buttons
                 const confirmButton: HTMLElement = costItem.querySelector("#confirm-edit-btn") as HTMLButtonElement;
                 const cancelButton: HTMLButtonElement = costItem.querySelector("#cancel-edit-btn") as HTMLButtonElement;
 
@@ -251,7 +236,6 @@ function showExistingEvent(): void {
                     const newDate: string = (costItem.querySelector("#edit-cost-date") as HTMLInputElement).value;
                     const newDescription: string = (costItem.querySelector("#edit-cost-description") as HTMLInputElement).value;
 
-                    // Update the cost details
                     if (
                         currentEvent.costs[index] &&
                         !isNaN(newAmount) && newAmount >= 0 && newDate && newDescription) {
@@ -274,7 +258,6 @@ function showExistingEvent(): void {
     }
 
     function updateStoredEvents(updatedEvent: any, index?: any): void {
-        debugger;
         const events: any[] = JSON.parse(localStorage.getItem("events")!) || [];
         if (index){
             events[index] = updatedEvent;
@@ -302,15 +285,12 @@ function showExistingEvent(): void {
         }
     }
     function showNotification(message: string): void {
-        // Create a div for the notification
         const notification: HTMLDivElement = document.createElement("div");
         notification.classList.add("notification");
         notification.innerText = message;
 
-        // Append it to the body
         document.body.appendChild(notification);
 
-        // Set a timeout to remove the notification after 3 seconds
         setTimeout(() => {
             notification.remove();
         }, 3000);
@@ -362,12 +342,10 @@ function showExistingEvent(): void {
         const overUnderPaymentsContainer: HTMLElement | null = document.getElementById("over-under-payments");
         if (!overUnderPaymentsContainer) return [];
 
-        overUnderPaymentsContainer.innerHTML = ""; // Clear previous results
+        overUnderPaymentsContainer.innerHTML = ""; 
 
-        // Create an object to hold the overpaid and underpaid amounts
         const paymentStatus: Record<string, number> = {};
 
-        // Calculate how much each participant overpaid or underpaid
         for (const participant of currentEvent.participants) {
             const costs: CostDetails[] = currentEvent.costs.filter(
                 (costDetail: CostDetails) => costDetail.participantName === participant
@@ -391,20 +369,18 @@ function showExistingEvent(): void {
             overUnderPaymentsContainer.appendChild(participantStatusElement);
         }
 
-        // Calculate who owes whom and display the transactions
         const transactions: string[] = [];
         for (const p1 in paymentStatus) {
             for (const p2 in paymentStatus) {
-                if (paymentStatus[p1] > 0 && paymentStatus[p2] < 0) { // p1 overpaid and p2 underpaid
+                if (paymentStatus[p1] > 0 && paymentStatus[p2] < 0) { 
                     const amountToPay: number = Math.min(paymentStatus[p1], Math.abs(paymentStatus[p2]));
                     transactions.push(`${p2} needs to pay €${amountToPay.toFixed(2)} to ${p1}.`);
-                    paymentStatus[p1] -= amountToPay; // Reduce the overpaid amount
-                    paymentStatus[p2] += amountToPay; // Reduce the underpaid amount
+                    paymentStatus[p1] -= amountToPay; 
+                    paymentStatus[p2] += amountToPay; 
                 }
             }
         }
 
-        // Display payment transactions
         if (transactions.length > 0) {
             const transactionsHeader: HTMLDivElement = document.createElement("div");
             transactionsHeader.textContent = "Payment Transactions:";
@@ -421,7 +397,7 @@ function showExistingEvent(): void {
             overUnderPaymentsContainer.appendChild(noTransactionsElement);
         }
 
-        return transactions; // Return transactions for sharing purposes
+        return transactions; 
     }
     function formatPaymentResults(currentEvent: any, amountPerPerson: number, transactions: string[]): string {
         let results: string = "Cost Splitting Results:\n\n";
@@ -454,10 +430,9 @@ function showExistingEvent(): void {
     }
     function shareToWhatsApp(currentEvent: any, amountPerPerson: number, transactions: string[]): void {
         const results: string = formatPaymentResults(currentEvent, amountPerPerson, transactions);
-        const whatsappMessage: string = encodeURIComponent(results); // Encode for URL
+        const whatsappMessage: string = encodeURIComponent(results);
         const whatsappUrl: string = `https://api.whatsapp.com/send?text=${whatsappMessage}`;
 
-        // Open WhatsApp
         window.open(whatsappUrl, "_blank");
     }
     function updateLocalStorage(key: string, value: any): void {

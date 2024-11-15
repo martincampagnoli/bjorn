@@ -7,29 +7,24 @@
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+    <h1>Search Participant Events</h1>
     <header class="navbar">
         <ul>
             <li><a href="index.html">Home</a></li>
             <li><a href="create-events.html">New event</a></li>
             <li><a href="existing-events.html">Existing event </a></li>
             <li><a href="all-events.html">All Events</a></li>
-            <!-- Add other navigation links if needed -->
         </ul>
     </header>
-    
     <main>
-        <h1>Search Participant Events</h1>
         <div class="form-container">
-            <label for="participantNameInput">Enter Participant Name:</label>
-            <input type="text" id="participantNameInput" placeholder="Type participant name">
-            <button id="searchButton">Search</button>
+            <label for="participant-name-input">Enter Participant Name:</label>
+            <input type="text" id="participant-name-input" placeholder="Type participant name">
+            <button id="search-button">Search</button>
         </div>
-        
-        <div id="eventResults" class="results-container">
-            <!-- Results will display here -->
+        <div id="event-results" class="results-container">
         </div>
     </main>
-
-    <script src="all-events.js"></script> <!-- Link to your JavaScript file -->
+    <script src="all-events.js"></script>
 </body>
 </html>
