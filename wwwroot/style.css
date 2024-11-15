@@ -17,7 +17,7 @@
 
 .cost-management label
 .cost-management input
-.cost-management select {
+.cost-management, .participant-management select {
     display: block;
     text-align: left;
     width: 300px; 
@@ -218,7 +218,7 @@ main{
     background-color:gray
 }
 
- #create-event-container, #event-container, #participant-management-container, #over-under-payments-container {
+ #create-event-container, #event-container, #participant-management-container, #over-under-payments-container, #add-cost-container{
     background-color: lightgray;
     border:2px solid rgba(161, 189, 127, 0.7);
     border-radius: 10px;
