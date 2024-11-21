@@ -1,3 +1,7 @@
+/* eslint-disable @stylistic/padded-blocks */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/typedef */
 interface CostDetails {
     participantName: string;
     date: string;
@@ -28,6 +32,7 @@ function showExistingEvent(): void {
 
         let events: string[] | any[] = [];
         let lastTransactions: string[] = [];
+        let eventIndex: number;
 
         if (localStorage.getItem("events")){
             events = JSON.parse(localStorage.getItem("events")!) || [];
@@ -37,7 +42,14 @@ function showExistingEvent(): void {
             window.location.href = "create-events.html";
         }
 
-        const currentEvent = events ?  events[events.length-1] : null;
+         if (localStorage.getItem("ID")){
+            eventIndex = JSON.parse(localStorage.getItem("ID")!);
+        }
+        else {
+           eventIndex = events.length - 1;
+        }
+
+        const currentEvent = events ?  events[eventIndex] : null;
         
         refreshView(currentEvent);
 
@@ -167,8 +179,8 @@ function showExistingEvent(): void {
         amountPerPersonParagraph.innerHTML = `Amount per Person (with tip): ${amountPerPerson.toFixed(2)}`;
 
     }
-    function displayParticipants(participantsContainer: any, eventContainer: any,  currentEvent: any): void {
-        participantsContainer.innerHTML = ""; 
+    function displayParticipants(participantsContainer: any, eventContainer: any, currentEvent: any): void {
+        participantsContainer.innerHTML = "";
         const grandTotal = calculateGrandTotal(currentEvent.costs);
 
         currentEvent.participants.forEach((participant: string | number) => {
@@ -298,12 +310,12 @@ function showExistingEvent(): void {
     function populateParticipantDropdown(currentEvent: { participants: string[] }): void {
         const costParticipantSelect = document.getElementById("cost-participant-select") as HTMLSelectElement | null;
         const deleteParticipantSelect = document.getElementById("delete-participant-select") as HTMLSelectElement | null;
-    
+
         if (!costParticipantSelect || !deleteParticipantSelect) {
             console.error("Participant select elements not found in the DOM.");
             return;
         }
-    
+
         const createOption = (text: string, value: string | null = null, isDisabled: boolean = false): HTMLOptionElement => {
             const option = document.createElement("option");
             option.text = text;
@@ -311,13 +323,13 @@ function showExistingEvent(): void {
             option.disabled = isDisabled;
             return option;
         };
-    
+
         costParticipantSelect.innerHTML = "";
         deleteParticipantSelect.innerHTML = "";
-    
+
         costParticipantSelect.add(createOption("Select participant", null, true));
         deleteParticipantSelect.add(createOption("Select participant", null, true));
-    
+
         if (currentEvent.participants.length > 0) {
             currentEvent.participants.forEach((participant) => {
                 costParticipantSelect.add(createOption(participant, participant));

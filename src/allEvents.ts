@@ -3,77 +3,61 @@ interface Event {
     description: string;
     amount: number;
     tip: number;
+    eventName: string;
 }
 
-interface ParticipantCosts {
-    [participantName: string]: Event[];
-}
+function AllEvents(): void {
+    const events: any = JSON.parse(localStorage.getItem("events") || "[]");
+    function displayEvents(): void {
+        const eventResultsContainer: HTMLElement | null = document.getElementById("event-results");
+        if (!eventResultsContainer) return;
 
-const participantCosts: ParticipantCosts = JSON.parse(localStorage.getItem("participantCosts") || "{}") as ParticipantCosts;
+        eventResultsContainer.innerHTML = ""; // Clear previous results
 
-function displayParticipantEvents(participantName: string): void {
-    const eventResultsContainer: HTMLElement | null = document.getElementById("eventResults");
-    if (!eventResultsContainer) return;
+        if (events.length === 0) {
+            eventResultsContainer.innerHTML = "<p>No events found.</p>";
+            return;
+        }
 
-    eventResultsContainer.innerHTML = ""; // Clear previous results
+        // Create a table to display events
+        const table: HTMLTableElement = document.createElement("table");
+        table.classList.add("event-table");
 
-    const events: Event[] = participantCosts[participantName] ?? []; // Defaults to empty array if not found
+        // Create table header
+        const headerRow: HTMLTableRowElement = document.createElement("tr");
+        const headers: string[] = ["Event Name"]; 
+        headers.forEach(headerText => {
+            const th: HTMLTableHeaderCellElement = document.createElement("th");
+            th.textContent = headerText;
+            headerRow.appendChild(th);
+        });
+        table.appendChild(headerRow);
 
-    if (events.length === 0) {
-        eventResultsContainer.innerHTML = `<p>No events found for ${participantName}.</p>`;
-        return;
-    }
+        // Populate the table with event data
+        events.forEach((event: Event, index: { toString: () => string | null; }) => {
+            const row: HTMLTableRowElement = document.createElement("tr");
 
-    // Create a table to display events
-    const table: HTMLTableElement = document.createElement("table");
-    table.classList.add("event-table");
+            // Assume description is the event name and amount is the number of people
+            const eventNameCell: HTMLTableCellElement = document.createElement("td");
+            eventNameCell.textContent = event.eventName; // Use event.description as the event name
+            row.appendChild(eventNameCell);
 
-    // Create table header
-    const headerRow: HTMLTableRowElement = document.createElement("tr");
-    const headers: string[] = ["Event Name", "Amount of People", "Date"]; // Specify type annotation
-    headers.forEach(headerText => {
-        const th: HTMLTableHeaderCellElement = document.createElement("th");
-        th.textContent = headerText;
-        headerRow.appendChild(th);
-    });
-    table.appendChild(headerRow);
+            const eventIDCell: HTMLTableCellElement = document.createElement("td");
+            eventIDCell.textContent = index.toString(); // Use event.description as the event name
+            row.appendChild(eventIDCell);
 
-    // Populate the table with event data
-    events.forEach((event: Event) => {
-        const row: HTMLTableRowElement = document.createElement("tr");
+            // Make the row clickable
+            row.addEventListener("click", () => {
+                localStorage.setItem("ID", index.toString()!);
+                window.location.href = "existing-events.html";
+            });
 
-        // Assume description is the event name and amount is the number of people
-        const eventNameCell: HTMLTableCellElement = document.createElement("td");
-        eventNameCell.textContent = event.description; // Use event.description as the event name
-        row.appendChild(eventNameCell);
-
-        const amountCell: HTMLTableCellElement = document.createElement("td");
-        amountCell.textContent = event.amount.toString(); // Use event.amount as the number of people
-        row.appendChild(amountCell);
-
-        const dateCell: HTMLTableCellElement = document.createElement("td");
-        dateCell.textContent = event.date; // Use event.date
-        row.appendChild(dateCell);
-
-        // Make the row clickable
-        row.addEventListener("click", () => {
-            // Redirect to existing-events.html with a query parameter (or similar method)
-            window.location.href = `existing-events.html?eventName=${encodeURIComponent(event.description)}`;
+            table.appendChild(row);
         });
 
-        table.appendChild(row);
-    });
-
-    eventResultsContainer.appendChild(table);
+        eventResultsContainer.appendChild(table);
+    }
+    displayEvents();
 }
 
-// Event listener for the search button
-document.getElementById("searchButton")?.addEventListener("click", () => {
-    const participantName: string = (document.getElementById("participantNameInput") as HTMLInputElement).value.trim();
-    if (participantName) {
-        displayParticipantEvents(participantName);
-    }
-    else {
-        alert("Please enter a participant name.");
-    }
-});
+AllEvents();
