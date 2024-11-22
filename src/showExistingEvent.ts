@@ -42,7 +42,7 @@ function showExistingEvent(): void {
             window.location.href = "create-events.html";
         }
 
-         if (localStorage.getItem("ID")){
+        if (localStorage.getItem("ID")){
             eventIndex = JSON.parse(localStorage.getItem("ID")!);
         }
         else {
@@ -269,14 +269,17 @@ function showExistingEvent(): void {
         }
     }
 
-    function updateStoredEvents(updatedEvent: any, index?: any): void {
+    function updateStoredEvents(updatedEvent: any): void {
+        let index;
         const events: any[] = JSON.parse(localStorage.getItem("events")!) || [];
-        if (index){
-            events[index] = updatedEvent;
+        if (localStorage.getItem("ID")){
+            index = JSON.parse(localStorage.getItem("ID")!);
         }
         else {
-            events[events.length - 1] = updatedEvent;
+            index = events.length - 1;
         }
+        events[index] = updatedEvent;
+
         updateLocalStorage("events", events);
     }
     function deleteCost(participant: string, index: number, deleteButton: HTMLButtonElement, currentEvent: any): void {
